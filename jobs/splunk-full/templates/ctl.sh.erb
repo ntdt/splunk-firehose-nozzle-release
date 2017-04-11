@@ -15,9 +15,10 @@ case $1 in
 
     chown -R vcap:vcap ${RUN_DIR} ${LOG_DIR} ${PACKAGE_DIR}/
 
-    mkdir -p ${SPLUNK_DB}
-
     echo $$ > ${PIDFILE}
+
+    mkdir -p ${SPLUNK_DB}
+    ln -fs ${JOB_DIR}/config/splunk-launch.conf ${PACKAGE_DIR}/etc/system/
 
     ln -fs ${JOB_DIR}/config/system_local/* ${PACKAGE_DIR}/etc/system/local/
 

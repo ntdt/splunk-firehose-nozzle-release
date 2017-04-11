@@ -5,6 +5,7 @@ templates:
   ctl.sh.erb: bin/ctl.sh
   system_inputs.conf.erb: config/system_local/inputs.conf
   system_user-seed.conf.erb: config/system_local/user-seed.conf
+  splunk-launch.conf.erb: config/splunk-launch.conf
 
 packages:
 - splunk
