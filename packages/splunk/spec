@@ -6,3 +6,4 @@ dependencies: []
 files:
   - splunk/splunk-linux-x86_64.tgz
   - splunk/splunk-version.txt
+  - splunk/rfc5424-syslog_11.tgz

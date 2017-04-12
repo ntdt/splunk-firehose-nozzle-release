@@ -6,3 +6,6 @@ tar xzf splunk/splunk-linux-x86_64.tgz \
     -C ${BOSH_INSTALL_TARGET} \
     --strip-components=1 \
     splunk
+
+tar xzf splunk/rfc5424-syslog_11.tgz \
+    -C ${BOSH_INSTALL_TARGET}/etc/apps
