@@ -9,3 +9,6 @@ tar xzf splunk/splunk-linux-x86_64.tgz \
 
 tar xzf splunk/rfc5424-syslog_11.tgz \
     -C ${BOSH_INSTALL_TARGET}/etc/apps
+
+tar xzf splunk/splunk-add-on-for-cloud-foundry_020.tgz \
+    -C ${BOSH_INSTALL_TARGET}/etc/apps
