@@ -22,6 +22,11 @@ case $1 in
 
     ln -fs ${JOB_DIR}/config/system_local/* ${PACKAGE_DIR}/etc/system/local/
 
+    # install mycerts SSL
+    chown -R vcap:vcap ${JOB_DIR}/config/mycerts
+    chmod 600 ${JOB_DIR}/config/mycerts/*.pem
+    ln -fs  ${JOB_DIR}/config/mycerts ${PACKAGE_DIR}/etc/auth/mycerts
+
     # install license file
     mkdir -p ${PACKAGE_DIR}/etc/licenses/enterprise
     ln -s ${JOB_DIR}/config/License.xml.lic ${PACKAGE_DIR}/etc/licenses/enterprise/

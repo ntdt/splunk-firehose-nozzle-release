@@ -2,11 +2,14 @@
 
 name: splunk-full
 templates:
-  ctl.sh.erb: bin/ctl.sh
-  system_inputs.conf.erb: config/system_local/inputs.conf
+  ctl.sh.erb:                bin/ctl.sh
+  system_inputs.conf.erb:    config/system_local/inputs.conf
   system_user-seed.conf.erb: config/system_local/user-seed.conf
-  splunk-launch.conf.erb: config/splunk-launch.conf
-  License.xml.lic.erb: config/License.xml.lic
+  system_web.conf.erb:       config/system_local/web.conf
+  splunk-launch.conf.erb:    config/splunk-launch.conf
+  License.xml.lic.erb:       config/License.xml.lic
+  mycerts_privkey.pem.erb:   config/mycerts/privkey.pem
+  mycerts_cert.pem.erb:      config/mycerts/cert.pem
 
 packages:
 - splunk
@@ -19,6 +22,18 @@ properties:
     admin_pass:
       default: changeme
       description: Admin password
+    http_port:
+      default: 443
+      description: HTTP listen port
+    enable_https:
+      default: false
+      description: activate HTTPS for SplunkWeb
+    tls_key:
+      default: ''
+      description: Private key TLS
+    tls_cert:
+      default: ''
+      description: Certificate TLS
     license:
       default: ''
       description: Splunk License

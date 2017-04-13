@@ -1,0 +1,5 @@
+[settings]
+httpport = <%= p('cf_splunk.https_port') %>
+enableSplunkWebSSL = <%= p('cf_splunk.enable_https') %>
+privKeyPath = /var/vcap/packages/splunk/etc/auth/mycerts/privkey.pem
+serverCert = /var/vcap/packages/splunk/etc/auth/mycerts/cert.pem
