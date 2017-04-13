@@ -19,7 +19,7 @@ case $1 in
 
     mkdir -p ${SPLUNK_DB} && chown vcap:vcap ${SPLUNK_DB}
     ln -fs ${JOB_DIR}/config/splunk-launch.conf ${PACKAGE_DIR}/etc/
-
+    # install local config files
     ln -fs ${JOB_DIR}/config/system_local/* ${PACKAGE_DIR}/etc/system/local/
 
     # install mycerts SSL
