@@ -22,6 +22,10 @@ case $1 in
     # install local config files
     ln -fs ${JOB_DIR}/config/system_local/* ${PACKAGE_DIR}/etc/system/local/
 
+    # install http event collector config
+    mkdir -p ${PACKAGE_DIR}/etc/apps/splunk_httpinput/local
+    ln -fs ${JOB_DIR}/config/apps_splunk_httpinput_local/* ${PACKAGE_DIR}/etc/apps/splunk_httpinput/local/
+
     # install mycerts SSL
     chown -R vcap:vcap ${JOB_DIR}/config/mycerts
     chmod 600 ${JOB_DIR}/config/mycerts/*.pem

@@ -7,6 +7,7 @@ templates:
   system_user-seed.conf.erb: config/system_local/user-seed.conf
   system_indexes.conf.erb:   config/system_local/indexes.conf
   system_web.conf.erb:       config/system_local/web.conf
+  apps_splunk_httpinput_inputs.conf.erb: config/apps_splunk_httpinput_local/inputs.conf
   splunk-launch.conf.erb:    config/splunk-launch.conf
   License.xml.lic.erb:       config/License.xml.lic
   mycerts_privkey.pem.erb:   config/mycerts/privkey.pem
