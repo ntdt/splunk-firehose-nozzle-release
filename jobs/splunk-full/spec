@@ -7,6 +7,7 @@ templates:
   system_user-seed.conf.erb: config/system_local/user-seed.conf
   system_indexes.conf.erb:   config/system_local/indexes.conf
   system_web.conf.erb:       config/system_local/web.conf
+  system_alert_actions.conf.erb: config/system_local/alert_actions.conf
   apps_splunk_httpinput_inputs.conf.erb: config/apps_splunk_httpinput_local/inputs.conf
   splunk-launch.conf.erb:    config/splunk-launch.conf
   License.xml.lic.erb:       config/License.xml.lic
@@ -39,3 +40,19 @@ properties:
     license:
       default: ''
       description: Splunk License
+    mailserver:
+      default: 'localhost:25'
+      description: Email Server to send notifications  <host>[:<port>]
+    mail_user:
+      default: ''
+      description: Email user
+    mail_password:
+      default: ''
+      description: Email password
+    use_ssl:
+      default: 0
+      description: Email SSL
+    use_tls:
+      default: 0
+      description: Email server use TLS
+      
