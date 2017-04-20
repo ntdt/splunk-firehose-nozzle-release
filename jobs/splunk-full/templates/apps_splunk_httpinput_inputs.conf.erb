@@ -1,12 +1,12 @@
-[http://cloudfoundry]
-token = <%=p('cf_splunk.http_token') %>
-description = "HTTP Events Collector"
-port=8088
-enableSSL=1
+[http]
+disabled=0
+enableSSL=0
 dedicatedIoThreads=2
+port=8088
 maxThreads = 0
 maxSockets = 0
 useDeploymentServer=0
-sslVersions=*,-ssl2
-allowSslCompression=true
-allowSslRenegotiation=true
+
+[http://cloudfoundry]
+token = <%=p('cf_splunk.http_token') %>
+description = "CloudFoundry HTTP Events Collector"
