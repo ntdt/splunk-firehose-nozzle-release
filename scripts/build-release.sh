@@ -48,7 +48,7 @@ export go_pkg_remote=https://storage.googleapis.com/golang/go1.7.4.linux-amd64.t
 
 export splunk_pkg_path=./tmp/splunk-linux-x86_64.tgz
 export splunk_version_path=./tmp/splunk-version.txt
-export splunk_pkg_remote=https://download.splunk.com/products/splunk/releases/6.5.1/linux/splunk-6.5.1-f74036626f0c-Linux-x86_64.tgz
+export splunk_pkg_remote=https://download.splunk.com/products/splunk/releases/6.5.3/linux/splunk-6.5.3-36937ad027d4-Linux-x86_64.tgz
 
 if [ -a "${go_pkg_path}" ]; then
     echo "Go package already exist, skipping download"
