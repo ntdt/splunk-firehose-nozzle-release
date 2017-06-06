@@ -57,9 +57,9 @@ case $1 in
     export FIREHOSE_SUBSCRIPTION_ID=<%= p('cf_splunk.firehose_subscription_id', 'splunk-firehose-subscription') %>
 
     export SPLUNK_TOKEN=<%= p('cf_splunk.splunk_token') %>
-    export SPLUNK_HOST=http://localhost:8088
+    export SPLUNK_HOST=<%=p('cf_splunk.splunk_forwarder_url')%>
     export SPLUNK_INDEX=<%= p('cf_splunk.splunk_index') %>
-    export FLUSH_INTERVAL=333ms
+    export FLUSH_INTERVAL=1000ms
 
     exec chpst -u vcap:vcap ${PACKAGE_DIR}/bin/splunk-firehose-nozzle \
       >>  $LOG_DIR/splunk-nozzle.stdout.log \

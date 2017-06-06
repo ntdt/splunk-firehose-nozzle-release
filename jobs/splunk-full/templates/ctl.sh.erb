@@ -35,6 +35,10 @@ case $1 in
     mkdir -p ${PACKAGE_DIR}/etc/licenses/enterprise
     ln -s ${JOB_DIR}/config/License.xml.lic ${PACKAGE_DIR}/etc/licenses/enterprise/
 
+    # install config cf_ops dashboard
+    mkdir -p ${PACKAGE_DIR}/etc/apps/Splunk_SA_CloudFoundry/local/data/ui/views
+    ln -fs ${JOB_DIR}/config/Splunk_SA_CloudFoundry/local/* ${PACKAGE_DIR}/etc/apps/Splunk_SA_CloudFoundry/local/data/ui/views/
+
     exec chpst -u vcap:vcap ${PACKAGE_DIR}/bin/splunk start --accept-license \
       >>  $LOG_DIR/splunk.stdout.log \
       2>> $LOG_DIR/splunk.stderr.log

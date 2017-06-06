@@ -13,7 +13,7 @@ templates:
   License.xml.lic.erb:       config/License.xml.lic
   mycerts_privkey.pem.erb:   config/mycerts/privkey.pem
   mycerts_cert.pem.erb:      config/mycerts/cert.pem
-
+  sample_cf_ops_dashboard.xml.erb:  config/Splunk_SA_CloudFoundry/local/sample_cf_ops_dashboard.xml
 packages:
 - splunk
 

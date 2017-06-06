@@ -23,7 +23,6 @@ properties:
       description: User to authenticate against cf API (needs cloud_controller.admin or cloud_controller.admin_read_only)
     api_password:
       description: Password for cf_splunk.firehose_user
-
     events:
       description: Array of event types to include. Possible values are HttpStartStop, LogMessage, ValueMetric, CounterEvent, Error, ContainerMetric
       default: ['ValueMetric', 'CounterEvent', 'Error', 'ContainerMetric']
@@ -32,7 +31,9 @@ properties:
     firehose_subscription_id:
       description: Unique identified for nozzle. Only need to change if splunk-firehose-nozzle-releases are deployed
       default: splunk-firehose-subscription
-
+    splunk_forwarder_url:
+      description: URL of splunk forwarder
+      default: "http://127.0.0.1:8088"
     splunk_token:
       description: Credentials for talking to the HTTP event collector
     splunk_index:

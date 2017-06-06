@@ -1,1 +1,25 @@
---- {} 
+---
+splunk/rfc5424-syslog_11.tgz:
+  object_id: 9cc3ea9c-f78e-437e-8f1e-5f1098a68e85
+  sha: 7ff46da6351183dfd8eefe92140c99307abce76b
+  size: 2321
+splunk/splunk-add-on-for-cloud-foundry_020.tgz:
+  object_id: 3714b0c9-6c25-41d0-92ff-b08c355ea217
+  sha: 352cbbd6d0e04e9b89c1d903d83156c4abce1a84
+  size: 24761
+splunk/splunk-linux-x86_64.tgz:
+  object_id: 39e349b7-e474-4de8-abc1-fcdec2aae292
+  sha: c8fd65cd691b797c52bd650e56a7ba5dd947b615
+  size: 222768270
+splunk/splunk-version.txt:
+  object_id: 73771c8c-a677-46dc-8cad-b26f691e4767
+  sha: ea02a4a7511b7d006fbd8bcd9bbb61ef0a05d4e3
+  size: 108
+golang/go-linux-amd64.tar.gz:
+  object_id: cabe1b25-c036-4704-b23b-768292c88ca0
+  sha: 2e5baf03d1590e048c84d1d5b4b6f2540efaaea1
+  size: 84021919
+golang/go-version.txt:
+  object_id: 1cceaf58-79af-44c7-a4cb-8b43adc91c5e
+  sha: f369bdd973099d4b9e212384bbecb880ad7ba5e1
+  size: 65
