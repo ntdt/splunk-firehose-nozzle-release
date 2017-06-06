@@ -1,0 +1,29 @@
+[Low Cell Capacity]
+action.email = 1
+action.email.to = <%= p('cf_splunk.emails_to') %>
+action.email.useNSSubject = 1
+alert.suppress = 1
+alert.suppress.period = 2h
+alert.track = 0
+counttype = number of events
+cron_schedule = * * * * *
+dispatch.earliest_time = rt-60m
+dispatch.latest_time = rt-0m
+display.general.type = visualizations
+display.page.search.mode = fast
+display.page.search.tab = visualizations
+display.statistics.show = 0
+display.visualizations.singlevalue.colorMode = block
+display.visualizations.singlevalue.trendDisplayMode = percent
+display.visualizations.type = singlevalue
+enableSched = 1
+quantity = 30
+relation = less than
+request.ui_dispatch_app = Splunk_SA_CloudFoundry
+request.ui_dispatch_view = search
+search = sourcetype=cf:valuemetric name=CapacityRemainingMemory \
+       | eval valueGB=round(case(unit=="MiB", value/1024, unit=="KiB", value/(1024*1024), unit=="GiB", value),2) \
+       | timechart span=5s avg(valueGB) as valueGB by job_instance \
+       | filldown \
+       | untable _time job_instance valueGB \
+       | timechart span=5s sum(valueGB)

@@ -12,7 +12,6 @@
     <panel>
       <title>MySQL Cluster Health</title>
       <single>
-        <title>MySQL Cluster Status</title>
         <search>
           <query>sourcetype=cf:valuemetric job=mysql  name="/p-mysql/galera/wsrep_cluster_status"|timechart span=15m avg(value)</query>
           <earliest>-15m</earliest>
@@ -27,7 +26,6 @@
     <panel>
       <title>MySQL Cluster Size</title>
       <single>
-        <title>Number of VMs</title>
         <search>
           <query>sourcetype="cf:valuemetric" name="/p-mysql/galera/wsrep_cluster_size"|timechart span=15m avg(value) as ClusterSize</query>
           <earliest>-15m</earliest>
@@ -52,44 +50,40 @@
       </single>
     </panel>
     <panel>
-      <title>MySQL Threads Running vs Threads Connected</title>
+      <title>MySQL VM health status</title>
       <chart>
-        <search ref="mysql threads connected / running"></search>
-        <option name="height">137</option>
-      </chart>
-    </panel>
-  </row>
-  <row>
-    <panel>
-      <title>Redis instances used memory(MB)</title>
-      <chart>
-        <title>Redis: used memory by node</title>
-        <search ref="Redis: used memory by node"></search>
+        <search>
+          <query>sourcetype=cf:valuemetric job=mysql name=system.healthy | timechart avg(value) span=15m by job_index</query>
+          <earliest>-15m</earliest>
+          <latest>now</latest>
+        </search>
         <option name="charting.chart">line</option>
-        <option name="height">194</option>
+        <option name="height">184</option>
       </chart>
     </panel>
     <panel>
-      <title>Redis max memory available (MB)</title>
+      <title>MySQL connected vs running threads</title>
       <chart>
-        <title>Redis: max memory by instance</title>
-        <search ref="Redis: max memory by instance"></search>
-        <option name="height">190</option>
+        <search>
+          <query>sourcetype="cf:valuemetric" job="mysql" name="/p-mysql/performance/threads_*"|timechart avg(value) as num_threads by unit</query>
+          <earliest>-60m@m</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="charting.chart">line</option>
+        <option name="height">148</option>
       </chart>
     </panel>
     <panel>
-      <title>Redis dedicated vm plan</title>
-      <single>
-        <title>Redis: available vm in dedicated_vm_plan</title>
-        <search ref="Redis: available vm in dedicated_vm_plan"></search>
-      </single>
-    </panel>
-    <panel>
-      <title>Redis shared vm plan</title>
-      <single>
-        <title>Redis: available vm in shared_vm_plan</title>
-        <search ref="Redis: available vm in shared_vm_plan"></search>
-      </single>
+      <title>Redis health status</title>
+      <chart>
+        <search>
+          <query>sourcetype=cf:valuemetric name=system.healthy job="*redis*" |timechart avg(value) span=15m by job</query>
+          <earliest>-60m@m</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="charting.chart">line</option>
+        <option name="height">154</option>
+      </chart>
     </panel>
   </row>
   <row>

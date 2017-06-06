@@ -37,7 +37,11 @@ case $1 in
 
     # install config cf_ops dashboard
     mkdir -p ${PACKAGE_DIR}/etc/apps/Splunk_SA_CloudFoundry/local/data/ui/views
-    ln -fs ${JOB_DIR}/config/Splunk_SA_CloudFoundry/local/* ${PACKAGE_DIR}/etc/apps/Splunk_SA_CloudFoundry/local/data/ui/views/
+    ln -fs ${JOB_DIR}/config/Splunk_SA_CloudFoundry/local/sample_cf_ops_dashboard.xml ${PACKAGE_DIR}/etc/apps/Splunk_SA_CloudFoundry/local/data/ui/views/
+
+    # install alerts savedsearches in admin user profil
+    mkdir -p  ${PACKAGE_DIR}/etc/users/admin/Splunk_SA_CloudFoundry/local
+    ln -fs ${JOB_DIR}/config/Splunk_SA_CloudFoundry/local/savedsearches.conf ${PACKAGE_DIR}/etc/users/admin/Splunk_SA_CloudFoundry/local/
 
     exec chpst -u vcap:vcap ${PACKAGE_DIR}/bin/splunk start --accept-license \
       >>  $LOG_DIR/splunk.stdout.log \
