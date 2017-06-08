@@ -8,12 +8,12 @@ splunk/splunk-add-on-for-cloud-foundry_020.tgz:
   sha: 352cbbd6d0e04e9b89c1d903d83156c4abce1a84
   size: 24761
 splunk/splunk-linux-x86_64.tgz:
-  object_id: 39e349b7-e474-4de8-abc1-fcdec2aae292
-  sha: c8fd65cd691b797c52bd650e56a7ba5dd947b615
-  size: 222768270
+  object_id: bda84a9f-9c76-4a2f-a8f8-1ebd2d235ce5
+  sha: 637043d9a5f4a3a093e8b01586357647e179f78c
+  size: 227135261
 splunk/splunk-version.txt:
-  object_id: 73771c8c-a677-46dc-8cad-b26f691e4767
-  sha: ea02a4a7511b7d006fbd8bcd9bbb61ef0a05d4e3
+  object_id: a5eb49e7-0d74-471e-95c6-b3b2b945a30a
+  sha: 79483b733d45199615f006a36cb11897db49637c
   size: 108
 golang/go-linux-amd64.tar.gz:
   object_id: cabe1b25-c036-4704-b23b-768292c88ca0
@@ -23,3 +23,7 @@ golang/go-version.txt:
   object_id: 1cceaf58-79af-44c7-a4cb-8b43adc91c5e
   sha: f369bdd973099d4b9e212384bbecb880ad7ba5e1
   size: 65
+splunk/website-monitoring_22.tgz:
+  object_id: 001b60f0-ee95-473b-81af-7b2e45928b66
+  sha: 33b2ea66d9a69545b7dcc95134b9e179d64199bf
+  size: 981671

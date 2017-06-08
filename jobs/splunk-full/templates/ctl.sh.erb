@@ -43,6 +43,10 @@ case $1 in
     mkdir -p  ${PACKAGE_DIR}/etc/users/admin/Splunk_SA_CloudFoundry/local
     ln -fs ${JOB_DIR}/config/Splunk_SA_CloudFoundry/local/savedsearches.conf ${PACKAGE_DIR}/etc/users/admin/Splunk_SA_CloudFoundry/local/
 
+    # install website_monitoring
+    mkdir -p  ${PACKAGE_DIR}/etc/apps/website_monitoring/local
+    ln -fs ${JOB_DIR}/config/website_monitoring_local/* ${PACKAGE_DIR}/etc/apps/website_monitoring/local/
+
     exec chpst -u vcap:vcap ${PACKAGE_DIR}/bin/splunk start --accept-license \
       >>  $LOG_DIR/splunk.stdout.log \
       2>> $LOG_DIR/splunk.stderr.log

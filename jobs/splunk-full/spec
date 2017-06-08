@@ -15,7 +15,9 @@ templates:
   mycerts_cert.pem.erb:                  config/mycerts/cert.pem
   sample_cf_ops_dashboard.xml.erb:       config/Splunk_SA_CloudFoundry/local/sample_cf_ops_dashboard.xml
   savedsearches.conf.erb:                config/Splunk_SA_CloudFoundry/local/savedsearches.conf
-
+  website_monitoring/app.conf:           config/website_monitoring_local/app.conf
+  website_monitoring/inputs.conf.erb:    config/website_monitoring_local/inputs.conf
+  website_monitoring/website_monitoring.conf:    config/website_monitoring_local/website_monitoring.conf
 packages:
 - splunk
 
@@ -60,3 +62,9 @@ properties:
     emails_to:
       default: ''
       descriptions: Alerts sent emails to list(comma separated list)
+    monitoring.websites:
+      default: []
+      descriptions: Sites to monitor
+      example:
+      - {name: 'My Site', interval: '15m', url: 'http://example.com'}
+

@@ -1,0 +1,7 @@
+<% p('cf_splunk.monitoring.websites').each do |website| %>
+[web_ping://<%= website["name"] %>]
+title = <%= website["name"] %>
+interval = <%= website["interval"] %>
+url = <%= website["url"] %>
+user_agent = Splunk Website Monitoring (+https://splunkbase.splunk.com/app/1493/)
+<% end %>
