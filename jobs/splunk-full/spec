@@ -67,4 +67,21 @@ properties:
       descriptions: Sites to monitor
       example:
       - {name: 'My Site', interval: '15m', url: 'http://example.com'}
-
+    ops_dashboard_xml:
+      default: ''
+      descriptions: config additionnal for Ops Dashboard
+      example: |
+        <panel>
+        <title>MySQL Cluster Health</title>
+        <single>
+        <search>
+        <query>sourcetype=cf:valuemetric job=mysql  name="/p-mysql/galera/wsrep_cluster_status"|eval status=round(value,2) |eval status=if(status==1, "OK", "Error")|timechart span=15m avg(value)</query>
+        <earliest>-15m</earliest>
+        <latest>now</latest>
+        <sampleRatio>1</sampleRatio>
+        <refresh>10m</refresh>
+        <refreshType>delay</refreshType>
+        </search>
+        <option name="height">91</option>
+        </single>
+        </panel>
