@@ -8,6 +8,7 @@ templates:
   system_indexes.conf.erb:               config/system_local/indexes.conf
   system_web.conf.erb:                   config/system_local/web.conf
   system_alert_actions.conf.erb:         config/system_local/alert_actions.conf
+  system_server.conf.erb:		 config/system_local/server.conf
   apps_splunk_httpinput_inputs.conf.erb: config/apps_splunk_httpinput_local/inputs.conf
   splunk-launch.conf.erb:                config/splunk-launch.conf
   License.xml.lic.erb:                   config/License.xml.lic
@@ -23,6 +24,9 @@ packages:
 
 properties:
   cf_splunk:
+    server_name:
+      default: mysplunk
+      description: FQDN of splunk server
     admin_user:
       default: admin
       description: Admin user name
