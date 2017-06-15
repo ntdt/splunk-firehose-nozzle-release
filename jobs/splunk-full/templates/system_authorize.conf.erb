@@ -1,0 +1,6 @@
+<% if_p('cf_splunk.roles') do |roles| %>
+<% roles.each do |role| %>
+[role_<%= role['name'] %>]
+<%= role['detail'] %>
+<% end %>
+<% end %>
