@@ -1,4 +1,6 @@
-[pcf_syslog]
-homePath   = $SPLUNK_DB/pcf_syslog/db
-coldPath   = $SPLUNK_DB/pcf_syslog/colddb
-thawedPath = $SPLUNK_DB/pcf_syslog/thaweddb
+<% if_p('cf_splunk.indexes') do |indexes| %>
+<% indexes.each do |index| %>
+[<%= index['name'] %>]
+<%= index['options'] %>
+<% end %>
+<% end %>

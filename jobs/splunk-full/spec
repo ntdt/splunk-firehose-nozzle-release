@@ -96,6 +96,14 @@ properties:
       example: |
         See http://docs.splunk.com/Documentation/Splunk/6.6.1/Admin/Authorizeconf for options
         - name: user_read_only
-          detail: |
+          options: |
             importRoles = user
             srchIndexesAllowed = index_ro
+    indexes:
+      default: []
+      description: Indexes config of Splunk
+      example: |
+        See http://docs.splunk.com/Documentation/Splunk/6.6.1/Admin/Indexesconf
+        - name: myindex
+          options:
+            homePath = $SPLUNK_DB/myindex/db
