@@ -10,6 +10,7 @@ templates:
   system_alert_actions.conf.erb:         config/system_local/alert_actions.conf
   system_server.conf.erb:		 config/system_local/server.conf
   system_authorize.conf.erb: 		 config/system_local/authorize.conf
+  system_authentication.conf.erb: 	 config/system_local/authentication.conf
   apps_splunk_httpinput_inputs.conf.erb: config/apps_splunk_httpinput_local/inputs.conf
   splunk-launch.conf.erb:                config/splunk-launch.conf
   License.xml.lic.erb:                   config/License.xml.lic
@@ -107,3 +108,6 @@ properties:
         - name: myindex
           options:
             homePath = $SPLUNK_DB/myindex/db
+    authentication:
+      description: Configuration of Splunk authentication
+
