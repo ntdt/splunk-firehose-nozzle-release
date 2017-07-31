@@ -51,6 +51,10 @@ case $1 in
     mkdir -p  ${PACKAGE_DIR}/etc/apps/website_monitoring/local
     ln -fs ${JOB_DIR}/config/website_monitoring_local/* ${PACKAGE_DIR}/etc/apps/website_monitoring/local/
 
+    # install update_cachet.sh script
+    chown vcap:vcap ${JOB_DIR}/bin/update_cachet.sh
+    ln -fs ${JOB_DIR}/bin/update_cachet.sh ${PACKAGE_DIR}/bin/scripts/
+
     exec chpst -u vcap:vcap ${PACKAGE_DIR}/bin/splunk start --accept-license \
       >>  $LOG_DIR/splunk.stdout.log \
       2>> $LOG_DIR/splunk.stderr.log
