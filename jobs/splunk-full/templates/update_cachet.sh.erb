@@ -2,8 +2,8 @@
 read sessionKey
 unset LD_LIBRARY_PATH
 header_1="Content-type: application/json"
-header_2="X-Cachet-Token: <%= p('cachet_token') %>"
-url="<%=p('cache_api')%>/incidents"
+header_2="X-Cachet-Token: <%= p('cf_splunk.cachet_token') %>"
+url="<%=p('cf_splunk.cachet_api')%>/incidents"
 csv_file=$8
 message=$(zgrep "Finish update deployment" $csv_file|cut -d ',' -f 7|sed "s/severity 4://g;s/[\"']//g")
 echo $message >> $SPLUNK_HOME/bin/scripts/message
