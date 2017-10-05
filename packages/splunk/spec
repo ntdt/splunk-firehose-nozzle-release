@@ -8,4 +8,4 @@ files:
   - splunk/splunk-version.txt
   - splunk/rfc5424-syslog_11.tgz
   - splunk/splunk-add-on-for-cloud-foundry_020.tgz
-  - splunk/website-monitoring_22.tgz
+  - splunk/website-monitoring_26.tgz
