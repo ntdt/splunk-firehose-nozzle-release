@@ -22,7 +22,7 @@ templates:
   website_monitoring/app.conf:           config/website_monitoring_local/app.conf
   website_monitoring/inputs.conf.erb:    config/website_monitoring_local/inputs.conf
   website_monitoring/website_monitoring.conf:    config/website_monitoring_local/website_monitoring.conf
-  update_cachet.sh.erb                   bin/update_cachet.sh
+  update_cachet.sh.erb:                  bin/update_cachet.sh
 packages:
 - splunk
 
