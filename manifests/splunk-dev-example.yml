@@ -17,9 +17,9 @@ networks:
     range: 10.245.0.0/16
     dns: 
     - 8.8.8.8
+    reserved: [10.245.0.0-10.245.0.10]
     static: [10.245.0.60-10.245.0.70]
   type: manual
-
 
 resource_pools:
 - cloud_properties:
@@ -51,12 +51,17 @@ instance_groups:
     properties:
       
       cf_splunk:
+        ldap_server_url: ldap://example.com:389
+        ldap_search_base: dc=example,dc=com
+        cf_url: https://cf.example.com
+        cf_admin_password: cf_changeme
+        cf_admin_user: cf_readonly
         server_name: splunk.example.com
         cachet_token: asd987asd9faskdf9asd8f7a9s
         cachet_api: http://example.com
         admin_user: admin
         optimistic_about_file_locking: 1
-        admin_pass: admin
+        admin_pass: changeme
         enable_https: true
         https_port: 8443
         http_token: 571021c4-449f-467e-b266-9ab16ec9f616
@@ -118,8 +123,10 @@ instance_groups:
             thawedPath = $SPLUNK_DB/pcf_syslog/thaweddb
         authentication: |
           [authentication]
-          authSettings = saml
-          authType = script
+          authType = Scripted
+          authSettings = script
+          [script]
+          scriptPath = /var/vcap/packages/python/bin/python_wrapper /var/vcap/packages/splunk-filter/splunk_filter.py
         idpCert: |
           -----BEGIN CERTIFICATE-----
          
