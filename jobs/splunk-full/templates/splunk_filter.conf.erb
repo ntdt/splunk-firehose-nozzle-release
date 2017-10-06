@@ -1,0 +1,11 @@
+[cloudfoundry]
+CF_URL=<%= p('cf_splunk.cf_url') %>
+admin_user=<%= p('cf_splunk.cf_admin_user') %>
+admin_password=<%= p('cf_splunk.cf_admin_password') %>
+
+[ldap]
+LDAP_SERVER=<%= p('cf_splunk.ldap_server_url') %>
+LDAP_USER_ROOT=<%= p('cf_splunk.ldap_search_base') %>
+
+[splunk]
+log_dir=/var/vcap/sys/log/<%= spec.job.name %>

@@ -4,6 +4,7 @@ RUN_DIR=/var/vcap/sys/run/splunk-full
 LOG_DIR=/var/vcap/sys/log/splunk-full
 JOB_DIR=/var/vcap/jobs/splunk-full
 PACKAGE_DIR=/var/vcap/packages/splunk
+SPLUNK_FILTER_DIR=/var/vcap/packages/splunk-filter
 PIDFILE=${RUN_DIR}/pid
 SPLUNK_DB=/var/vcap/store/splunk_db
 
@@ -16,6 +17,8 @@ case $1 in
     chown -R vcap:vcap ${RUN_DIR} ${LOG_DIR} ${PACKAGE_DIR}/
 
     echo $$ > ${PIDFILE}
+
+    ln -fs ${JOB_DIR}/config/splunk_filter.conf ${SPLUNK_FILTER_DIR}/splunk_filter.conf
 
     mkdir -p ${SPLUNK_DB} && chown vcap:vcap ${SPLUNK_DB}
     ln -fs ${JOB_DIR}/config/splunk-launch.conf ${PACKAGE_DIR}/etc/

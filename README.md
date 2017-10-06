@@ -12,7 +12,7 @@ Local development
 bosh upload stemcell ~/Desktop/bosh/bosh-stemcell-XXXX.X-warden-boshlite-ubuntu-trusty-go_agent.tgz
 ```
 
-* Pull latest submodules, namely `src/splunk-firehose-nozzle`
+* Pull latest submodules, namely `src/splunk-firehose-nozzle` and `src/splunk_filter`
 ```
 git submodule update --init --recursive
 ```

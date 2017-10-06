@@ -1,0 +1,8 @@
+---
+name: splunk-filter
+
+dependencies:
+  - splunk
+
+files:
+  - splunk_filter/**/*

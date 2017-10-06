@@ -23,11 +23,24 @@ templates:
   website_monitoring/inputs.conf.erb:    config/website_monitoring_local/inputs.conf
   website_monitoring/website_monitoring.conf:    config/website_monitoring_local/website_monitoring.conf
   update_cachet.sh.erb:                  bin/update_cachet.sh
+  splunk_filter.conf.erb:                config/splunk_filter.conf
 packages:
 - splunk
+- splunk-filter
+- openldap
+- python
 
 properties:
   cf_splunk:
+    cf_admin_user:
+      default: admin
+      description: Cloud Foundry administrator user
+    cf_admin_password:
+      description: Cloud Foundry administrator password
+    ldap_server_url:
+      description: LDAP server URL (ldap://example.com:389)
+    ldap_search_base:
+      description: Search base for LDAP users (dc=example,dc=com)
     server_name:
       default: mysplunk
       description: FQDN of splunk server

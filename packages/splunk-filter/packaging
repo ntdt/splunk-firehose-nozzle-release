@@ -1,0 +1,4 @@
+set -ex
+
+rm -f splunk_filter/splunk_filter.conf
+mv splunk_filter/* ${BOSH_INSTALL_TARGET}
