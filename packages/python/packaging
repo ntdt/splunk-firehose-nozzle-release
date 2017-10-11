@@ -31,12 +31,12 @@ pip install --upgrade python/virtualenv-*-py2.py3-none-any.whl
 
 for dir in $(ls -d /var/vcap/packages/*/include); do export C_INCLUDE_PATH=$dir:${C_INCLUDE_PATH:-}; done
 export C_INCLUDE_PATH=/var/vcap/packages/sasl/include/sasl:${C_INCLUDE_PATH:-}
-tar xf python/pyldap-2.4.37.tar.gz
-pushd pyldap-pyldap*
+tar xzf python/pyldap-2.4.37.tar.gz
+pushd pyldap-2.4.37
   python setup.py install --prefix ${BOSH_INSTALL_TARGET}
 popd
 
-tar xf python/requests-v2.18.4.tar.gz
+tar xzf python/requests-v2.18.4.tar.gz
 pushd requests-2.18.4
   python setup.py install --prefix ${BOSH_INSTALL_TARGET}
 popd

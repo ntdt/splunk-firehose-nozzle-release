@@ -1,4 +1,4 @@
-check process splunk-full matching "^splunkd -p [0-9]+ start$"
+check process splunk-full matching "^splunkd -p [0-9]+ (start|restart)$"
   start program "/var/vcap/jobs/splunk-full/bin/ctl.sh start"
   stop program "/var/vcap/jobs/splunk-full/bin/ctl.sh stop"
   group vcap
