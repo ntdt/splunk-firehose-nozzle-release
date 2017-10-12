@@ -123,6 +123,17 @@ properties:
         - name: myindex
           options:
             homePath = $SPLUNK_DB/myindex/db
+    inputs:
+      default: []
+      description: Inputs config of Splunk
+      example: |
+        See http://docs.splunk.com/Documentation/Splunk/6.6.1/Admin/Inputsconf
+        - name: tcp://1234
+          options: |
+            connection_host = ip
+            sourcetype = rfc5424_syslog
+            index = my_splunk_index
+           
     authentication:
       description: Configuration of Splunk authentication
     idpCert:
