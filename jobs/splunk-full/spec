@@ -32,6 +32,15 @@ packages:
 
 properties:
   cf_splunk:
+    system_index: 
+      default: pcf_syslog
+      description: name of splunk index for system logs, used for filtering
+    app_index: 
+      default: pcf_apps
+      description: name of splunk index for apps logs, used for filtering
+    service_search_filter:
+      default: index=pcf_syslog NOT appname=gorouter service-instance
+      description: Filter to apply to everybody for partial system index access
     cf_admin_user:
       default: admin
       description: Cloud Foundry administrator user
@@ -45,7 +54,7 @@ properties:
       default: mysplunk
       description: FQDN of splunk server
     admin_user:
-      default: admin
+      default: 'admin'
       description: Admin user name
     admin_pass:
       default: changeme
