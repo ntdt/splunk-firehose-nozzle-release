@@ -32,6 +32,15 @@ packages:
 
 properties:
   cf_splunk:
+    system_index: 
+      default: pcf_syslog
+      description: name of splunk index for system logs, used for filtering
+    app_index: 
+      default: pcf_apps
+      description: name of splunk index for apps logs, used for filtering
+    service_search_filter:
+      default: index=pcf_syslog NOT appname=gorouter service-instance
+      description: Filter to apply to everybody for partial system index access
     cf_admin_user:
       default: admin
       description: Cloud Foundry administrator user
@@ -45,7 +54,7 @@ properties:
       default: mysplunk
       description: FQDN of splunk server
     admin_user:
-      default: admin
+      default: 'admin'
       description: Admin user name
     admin_pass:
       default: changeme
@@ -123,6 +132,17 @@ properties:
         - name: myindex
           options:
             homePath = $SPLUNK_DB/myindex/db
+    inputs:
+      default: []
+      description: Inputs config of Splunk
+      example: |
+        See http://docs.splunk.com/Documentation/Splunk/6.6.1/Admin/Inputsconf
+        - name: tcp://1234
+          options: |
+            connection_host = ip
+            sourcetype = rfc5424_syslog
+            index = my_splunk_index
+           
     authentication:
       description: Configuration of Splunk authentication
     idpCert:

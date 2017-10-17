@@ -4,7 +4,9 @@ host = <%= spec.name %>_<%= spec.index %>_<%= spec.id %>
 [splunktcp://9997]
 connection_host = ip
 
-[tcp://5514]
-connection_host = ip
-sourcetype = rfc5424_syslog
-index = pcf_syslog
+<% if_p('cf_splunk.inputs') do |inputs| %>
+<% inputs.each do |input| %>
+[<%= input['name'] %>]
+<%= input['options'] %>
+<% end %>
+<% end %>
