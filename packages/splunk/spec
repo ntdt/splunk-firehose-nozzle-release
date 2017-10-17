@@ -7,5 +7,6 @@ files:
   - splunk/splunk-linux-x86_64.tgz
   - splunk/splunk-version.txt
   - splunk/rfc5424-syslog_11.tgz
+  - splunk/slack-webhook-alert_201.tgz
   - splunk/splunk-add-on-for-cloud-foundry_020.tgz
   - splunk/website-monitoring_26.tgz
