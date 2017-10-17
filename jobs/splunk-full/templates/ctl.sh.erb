@@ -25,6 +25,9 @@ case $1 in
     # install local config files
     ln -fs ${JOB_DIR}/config/system_local/* ${PACKAGE_DIR}/etc/system/local/
 
+    mkdir -p ${PACKAGE_DIR}/etc/users/admin/search/local
+    ln -fs ${JOB_DIR}/config/users_admin_search_local/savedsearches.conf 
+
     # install idpCerts
     mkdir -p ${PACKAGE_DIR}/etc/auth/idpCerts
     ln -s ${JOB_DIR}/config/auth/idpCerts/* ${PACKAGE_DIR}/etc/auth/idpCerts/
