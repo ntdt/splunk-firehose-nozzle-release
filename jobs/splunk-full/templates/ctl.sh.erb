@@ -25,6 +25,10 @@ case $1 in
     # install local config files
     ln -fs ${JOB_DIR}/config/system_local/* ${PACKAGE_DIR}/etc/system/local/
 
+    mkdir -p ${PACKAGE_DIR}/etc/apps/search/local
+    ln -fs ${JOB_DIR}/config/apps_search_local/savedsearches.conf ${PACKAGE_DIR}/etc/apps/search/local/
+    ln -fs ${JOB_DIR}/config/apps_search_local/ui-prefs.conf ${PACKAGE_DIR}/etc/apps/search/local/
+
     # install idpCerts
     mkdir -p ${PACKAGE_DIR}/etc/auth/idpCerts
     ln -s ${JOB_DIR}/config/auth/idpCerts/* ${PACKAGE_DIR}/etc/auth/idpCerts/

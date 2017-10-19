@@ -19,6 +19,8 @@ templates:
   mycerts_cert.pem.erb:                  config/mycerts/cert.pem
   sample_cf_ops_dashboard.xml.erb:       config/Splunk_SA_CloudFoundry/local/sample_cf_ops_dashboard.xml
   savedsearches.conf.erb:                config/Splunk_SA_CloudFoundry/local/savedsearches.conf
+  apps_search_local_savedsearches.conf.erb:         config/apps_search_local/savedsearches.conf
+  apps_search_local_ui-prefs.conf.erb:         config/apps_search_local/ui-prefs.conf
   website_monitoring/app.conf:           config/website_monitoring_local/app.conf
   website_monitoring/inputs.conf.erb:    config/website_monitoring_local/inputs.conf
   website_monitoring/website_monitoring.conf:    config/website_monitoring_local/website_monitoring.conf

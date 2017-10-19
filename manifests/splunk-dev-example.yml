@@ -49,8 +49,19 @@ instance_groups:
   - name: splunk-full
     release: cf-splunk
     properties:
-      
       cf_splunk:
+        alerts:
+        - name: alert_printer
+          description: is an alert for when your printer is on fire
+          slack:
+            webhook: "https://hooks.slack.com/services/ABC12345/XYZ54321/H0H0H0"
+            message: "This is a fake test alert"
+          search: index=my_index printer fire
+        - name: alert_banana
+          description: is an alert for some banana
+          email: banana@example.com
+          search: index=bananas banana
+          script: eat_banana.sh
         ldap_server_url: ldap://example.com:389
         ldap_search_base: dc=example,dc=com
         cf_url: https://cf.example.com

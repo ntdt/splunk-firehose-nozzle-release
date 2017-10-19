@@ -1,0 +1,50 @@
+<% if_p('cf_splunk.alerts') do |alerts| %><% alerts.each do |alert| -%>
+[<%= alert['name'] %>]
+description = <%= alert['description'] %>
+<% if alert.has_key?('slack') -%>
+action.slack_webhook_alert = 1
+action.slack_webhook_alert.param.slack_webhook = <%= alert['slack']['webhook'] %>
+action.slack_webhook_alert.param.slack_message = <% if alert['slack'].has_key?('message') %><%= alert['slack']['message'] %><% else %>```$result._raw$```<% end %>
+<% end -%>
+<% if alert.has_key?('email') -%>
+action.email = 1
+action.email.sendresults = 1
+action.email.to = <%= alert['email'] %>
+action.email.useNSSubject = 1
+<% end -%>
+<% if alert.has_key?('script') -%>
+action.script = 1
+action.script.filename = <%= alert['script'] %>
+<% end -%>
+<% if alert.has_key?('schedule') -%>
+cron_schedule = <%= alert['schedule']['cron_schedule'] %>
+<% else -%>
+cron_schedule = * * * * *
+<% end -%>
+<% if alert.has_key?('conditions') -%>
+counttype = <%= alert['conditions']['counttype'] %>
+dispatch.earliest_time = <%= alert['conditions']['earliest_time'] %>
+dispatch.latest_time = <%= alert['conditions']['latest_time'] %>
+relation = <%= alert['conditions']['relation'] %>
+quantity = <%= alert['conditions']['quantity'] %>
+<% else -%>
+dispatch.earliest_time = rt
+dispatch.latest_time = rt
+<% end -%>
+<% if alert.has_key?('suppress') -%>
+alert.suppress = 1
+alert.suppress.period = <%= suppress %>s
+alert.track = 0
+<% else -%>
+alert.suppress = 0
+<% end -%>
+search = <%= alert['search'] %>
+request.ui_dispatch_app = search
+request.ui_dispatch_view = search
+enableSched = 1
+<% end %><% end -%>
+
+
+
+
+

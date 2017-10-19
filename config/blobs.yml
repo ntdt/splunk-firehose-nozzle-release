@@ -24,7 +24,6 @@ python/pip-9.0.1-py2.py3-none-any.whl:
   sha: c70393185d27ae8b49a117e6dcc18bc5f8f3a1c3
 python/pyldap-2.4.37.tar.gz:
   size: 303732
-  object_id: 49e5b6d5-c2b0-41b0-5a8b-7577205c574d
   sha: 8ea28d03dd4b229dd7e296db404e598883070394
 python/requests-v2.18.4.tar.gz:
   size: 3040025
@@ -50,6 +49,9 @@ splunk/rfc5424-syslog_11.tgz:
   size: 2321
   object_id: c357f28b-215d-4cfb-535b-599b0ecd26be
   sha: 7ff46da6351183dfd8eefe92140c99307abce76b
+splunk/slack-webhook-alert_201.tgz:
+  size: 555757
+  sha: 90158e8554e0da79caea036c5ef95dbe9e5d59f1
 splunk/splunk-add-on-for-cloud-foundry_020.tgz:
   size: 24761
   object_id: 8f3aa816-6796-4af4-762e-34c98a3fd288
@@ -60,7 +62,6 @@ splunk/splunk-linux-x86_64.tgz:
   sha: 637043d9a5f4a3a093e8b01586357647e179f78c
 splunk/splunk-version.txt:
   size: 108
-  object_id: 8a19c664-a72f-4456-62bd-505ed67a400b
   sha: ea02a4a7511b7d006fbd8bcd9bbb61ef0a05d4e3
 splunk/website-monitoring_26.tgz:
   size: 1360994
