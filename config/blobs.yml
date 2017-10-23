@@ -10,6 +10,9 @@ golang/go-version.txt:
   size: 65
   object_id: 328d80a8-f2c9-457c-578b-534e264415a2
   sha: f369bdd973099d4b9e212384bbecb880ad7ba5e1
+jq/jq-linux64-1.5:
+  size: 3027945
+  sha: d8e36831c3c94bb58be34dd544f44a6c6cb88568
 openldap/openldap-2.4.44.tgz:
   size: 5658830
   object_id: b76229e8-7325-4b45-472b-30a6ee09235c
