@@ -1,29 +1,31 @@
-[Low Cell Capacity]
+<% if_p('cf_splunk.splunk_sa_cloudfoundry_alerts') do |alerts| %><% alerts.each do |alert| -%>
+[<%= alert['name'] %>]
+description = <%= alert['description'] %>
+<% if alert.has_key?('slack') -%>
+action.slack_webhook_alert = 1
+action.slack_webhook_alert.param.slack_webhook = <%= alert['slack']['webhook'] %>
+action.slack_webhook_alert.param.slack_message = <% if alert['slack'].has_key?('message') %><%= alert['slack']['message'] %><% else %>```$result._raw$```<% end %>
+<% end -%>
+<% if alert.has_key?('email') -%>
 action.email = 1
-action.email.to = <%= p('cf_splunk.emails_to') %>
+action.email.sendresults = 1
+action.email.to = <%= alert['email'] %>
 action.email.useNSSubject = 1
-alert.suppress = 1
-alert.suppress.period = 2h
-alert.track = 0
-counttype = number of events
+<% end -%>
+<% if alert.has_key?('script') -%>
+action.script = 1
+action.script.filename = <%= alert['script'] %>
+<% end -%>
+<% if alert.has_key?('custom_content') -%>
+<%= alert['custom_content'] %>
+<% else -%>
 cron_schedule = * * * * *
-dispatch.earliest_time = rt-60m
-dispatch.latest_time = rt-0m
-display.general.type = visualizations
-display.page.search.mode = fast
-display.page.search.tab = visualizations
-display.statistics.show = 0
-display.visualizations.singlevalue.colorMode = block
-display.visualizations.singlevalue.trendDisplayMode = percent
-display.visualizations.type = singlevalue
-enableSched = 1
-quantity = 30
-relation = less than
-request.ui_dispatch_app = Splunk_SA_CloudFoundry
+dispatch.earliest_time = rt
+dispatch.latest_time = rt
+alert.suppress = 0
+request.ui_dispatch_app = search
 request.ui_dispatch_view = search
-search = sourcetype=cf:valuemetric name=CapacityRemainingMemory \
-       | eval valueGB=round(case(unit=="MiB", value/1024, unit=="KiB", value/(1024*1024), unit=="GiB", value),2) \
-       | timechart span=5s avg(valueGB) as valueGB by job_instance \
-       | filldown \
-       | untable _time job_instance valueGB \
-       | timechart span=5s sum(valueGB)
+enableSched = 1
+<% end -%>
+search = <%= alert['search'] %>
+<% end %><% end -%>

@@ -5,8 +5,46 @@ header_1="Content-type: application/json"
 header_2="X-Cachet-Token: <%= p('cf_splunk.cachet_token') %>"
 url="<%=p('cf_splunk.cachet_api')%>/incidents"
 csv_file=$8
-message=$(zgrep "Finish update deployment" $csv_file|cut -d ',' -f 7|sed "s/severity 4://g;s/[\"']//g")
-echo $message >> $SPLUNK_HOME/bin/scripts/message
-data='{"name":"Bosh deployment","message":"'$message'","status":4,"visible":1}'
-echo $data > $SPLUNK_HOME/bin/scripts/create_incident.json
-curl -X POST -H "$header_1" -H "$header_2" --url "$url" --data @$SPLUNK_HOME/bin/scripts/create_incident.json >>$SPLUNK_HOME/bin/scripts/update_cachet_output.txt 2>&1
+if [ "$csv_file" == "" ] ; then
+  exit 1
+fi
+which jq || export PATH="/var/vcap/packages/jq/bin:$PATH"
+jsonline=$(zgrep object_name $csv_file | sed 's/^.*\] \(.*}\)".*$/\1/' | sed 's/""/"/g')
+message=$(echo $jsonline | jq -r .context_json | sed 's/\\"/"/g' | jq -r .message | sed 's/.*severity ..//')
+deployname=$(echo $jsonline | jq -r .deployment)
+action=unknown
+echo $message | grep -qi "Finish.update.deploy" && action=finish
+echo $message | grep -qi "Begin.update.deploy" && action=begin
+echo $message | grep -qi "Error.during.update.deploy" && action=error
+if [ "$action" == "unknown" ]; then
+exit 1
+fi
+
+msgfile=$(mktemp)
+responsefile=$(mktemp)
+
+if [ "$action" == "begin" ]; then
+  # give a chance for previous notification to be processed if still running
+  test -e "$SPLUNK_HOME/bin/scripts/last_${deployname}" \
+    && sleep 15 \
+    && rm -f "$SPLUNK_HOME/bin/scripts/last_${deployname}" 
+  echo '{"name":"'Bosh: deployment started: $deployname'","message":"'$message'","status":4,"visible":1}' > $msgfile
+  curl -q -X POST -H "$header_1" -H "$header_2" --url "$url" --data @$msgfile >> $responsefile
+  jq -r .data.id $responsefile > $SPLUNK_HOME/bin/scripts/last_${deployname}
+else
+  sleep 30 # prevents race conditions, delays end deployment notification...
+  lastid=""
+  test -e "$SPLUNK_HOME/bin/scripts/last_${deployname}" \
+    && lastid=$(cat "$SPLUNK_HOME/bin/scripts/last_${deployname}" \
+    && rm -f "$SPLUNK_HOME/bin/scripts/last_${deployname}")
+  if [ "$action" == "finish" ]; then
+    echo '{"name":"'Bosh: deployment completed: $deployname'","message":"'$message'","status":4,"visible":1}' > $msgfile
+  elif [ "$action" == "error" ]; then
+    echo '{"name":"'Bosh: deployment failed: $deployname'","message":"'$message'","status":4,"visible":1}' > $msgfile
+  fi
+  if [ "$lastid" == "" ]; then
+    curl -q -X POST -H "$header_1" -H "$header_2" --url "$url" --data @$msgfile >> $responsefile
+  else
+    curl -q -X PUT -H "$header_1" -H "$header_2" --url "${url}/${lastid}" --data @$msgfile >> $responsefile
+  fi
+fi
