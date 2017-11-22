@@ -50,6 +50,7 @@ instance_groups:
     release: cf-splunk
     properties:
       cf_splunk:
+        users_regex: ^[a-zA-Z0-9-_]+$
         alerts:
         - name: alert_printer
           description: is an alert for when your printer is on fire

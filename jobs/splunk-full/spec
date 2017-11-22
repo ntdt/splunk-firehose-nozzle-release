@@ -35,6 +35,9 @@ packages:
 
 properties:
   cf_splunk:
+    users_regex:
+      default: ^[a-zA-Z0-9-_]+$
+      description: regex to match valid splunk users in CF
     system_index: 
       default: pcf_syslog
       description: name of splunk index for system logs, used for filtering
