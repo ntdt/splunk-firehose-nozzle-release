@@ -1,197 +1,138 @@
 ---
-name: cf-splunk-forwarder
-director_uuid: ed4ca17d-c8a8-42c4-b3aa-c002b7aeed39
-
-compilation:
-  cloud_properties:
-    name: random
-  network: service1
-  reuse_compilation_vms: true
-  workers: 6
-
-networks:
-- name: service1
-  subnets:
-  - gateway: 10.245.0.1
-    name: service1
-    range: 10.245.0.0/16
-    dns: 
-    - 8.8.8.8
-    reserved: [10.245.0.0-10.245.0.10]
-    static: [10.245.0.60-10.245.0.70]
-  type: manual
-
-resource_pools:
-- cloud_properties:
-    name: random
-  name: small_z1
-  network: service1
-  stemcell:
-    name: bosh-warden-boshlite-ubuntu-trusty-go_agent
-    version: latest
-
-- name: splunk-full
+name: splunk
+instance_groups:
+- azs:
+  - nullaz
   instances: 1
-  resource_pool: small_z1
-  stemcell: trusty
-  networks:
-  - name: service1
-    defaults:
-    - dns
-    - gateway
-    static_ips:
-    - 10.245.0.60
   jobs:
   - name: splunk-full
-    release: cf-splunk
     properties:
       cf_splunk:
-        users_regex: ^[a-zA-Z0-9-_]+$
-        alerts:
-        - name: alert_printer
-          description: is an alert for when your printer is on fire
-          slack:
-            webhook: "https://hooks.slack.com/services/ABC12345/XYZ54321/H0H0H0"
-            message: "This is a fake test alert"
-          search: index=my_index printer fire
-        - name: alert_banana
-          description: is an alert for some banana
-          email: banana@example.com
-          search: index=bananas banana
-          script: eat_banana.sh
-        ldap_server_url: ldap://example.com:389
-        ldap_search_base: dc=example,dc=com
-        cf_url: https://cf.example.com
-        cf_admin_password: cf_changeme
-        cf_admin_user: cf_readonly
-        server_name: splunk.example.com
-        cachet_token: asd987asd9faskdf9asd8f7a9s
-        cachet_api: http://example.com
-        admin_user: admin
-        optimistic_about_file_locking: 1
         admin_pass: changeme
-        enable_https: true
-        https_port: 8443
-        http_token: 571021c4-449f-467e-b266-9ab16ec9f616
-        mailserver: none
-        mailuser: none
-        mailpassword: none
-        mail_use_tls: 0
-        mail_use_ssl: 0
-        emails_to: none
-        tls_key: ((generated_splunk_cert.private_key))
-        tls_cert: ((generated_splunk_cert.certificate))
-        license: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<license>"
-        monitoring:
-          websites:
-          - name: Ops Manager
-            interval: 15m
-            url: https://opsman.example.com
-          - name: Apps Manager
-            interval: 15m
-            url: https://apps.example.com
-        ops_dashboard_xml: |
-          <panel>
-          <title>MySQL Cluster Health</title>
-          <single>
-          <search>
-          <query>sourcetype=cf:valuemetric job=mysql  name="/p-mysql/galera/wsrep_cluster_status"|eval statusRound=round(value,2) |timechart span=15m mode(statusRound)</query>
-          <earliest>-60m</earliest>
-          <latest>now</latest>
-          <sampleRatio>1</sampleRatio>
-          <refresh>10m</refresh>
-          <refreshType>delay</refreshType>
-          </search>
-          <option name="height">150</option>
-          <option name="colorMode">block</option>
-          <option name="rangeColors">["0xd93f3c","0x65a637"]</option>
-          <option name="rangeValues">[0.9]</option>
-          <option name="useColors">1</option>
-          </single>
-          </panel>
-        roles:
-        - name: defaultrole
-          options: |
-            importRoles = user
-            cumulativeRTSrchJobsQuota = 2
-            cumulativeSrchJobsQuota = 2
-            rtSrchJobsQuota = 2
-            srchFilter = index="pcf_syslog"  host="*"
-            srchIndexesAllowed = pcf_syslog
-            srchIndexesDefault = pcf_syslog
-            srchJobsQuota = 2
-            srchMaxTime = 0
-            srchTimeWin = -1
-
-        indexes:
-        - name: pcf_syslog
-          options: |
-            homePath   = $SPLUNK_DB/pcf_syslog/db
-            coldPath   = $SPLUNK_DB/pcf_syslog/colddb
-            thawedPath = $SPLUNK_DB/pcf_syslog/thaweddb
+        admin_user: admin
+        alerts:
+        - description: something happened
+          name: postfix_connectivity
+          search: 'index=myIndex appname=crazy.app (unhealthy OR running OR failed) | regex _raw="instance: ''myapp/.*Connection failed|not running"'
+          slack:
+            message: ":fire: SOMETHING IS HAPPENING"
+            webhook: https://hooks.slack.com/services/DEADBEEF/BEEFDEAD/ThisisNotARealToken
+          custom_content: |
+            alert.digest_mode = 0
+            alert.suppress = 1
+            alert.suppress.fields = friendlyOutput
+            alert.suppress.period = 20m
+            alert.track = 1
+            counttype = number of events
+            cron_schedule = */2 * * * *
+            dispatch.earliest_time = -4m
+            dispatch.latest_time = now
+            display.events.fields = ["host","source","sourcetype","deployment"]
+            display.general.type = statistics
+            display.page.search.tab = statistics
+            enableSched = 1
+            quantity = 0
+            relation = greater than
+            request.ui_dispatch_app = search
+            request.ui_dispatch_view = search
+        app_index: pcf_apps
         authentication: |
           [authentication]
           authType = Scripted
           authSettings = script
           [script]
           scriptPath = /var/vcap/packages/python/bin/python_wrapper /var/vcap/packages/splunk-filter/splunk_filter.py
+          scriptSearchFilters = 1
+          [cacheTiming]
+          userLoginTTL    = 10s
+          getUserInfoTTL  = 2m
+          getUsersTTL     = 2m
+        cachet_api: https://example.com/api/v1
+        cachet_token: ThisIsNotARealToken
+        cf_admin_password: OhMyGodIOnlyNeedReadAdmin
+        cf_admin_user: readadmin
+        cf_url: https://my.cf.example.com
+        emails_to: me@example.com
+        enable_https: true
+        http_token: SOME-UUID-LIKE-THING
+        https_port: 8443
         idpCert: |
           -----BEGIN CERTIFICATE-----
-         
+          ...
           -----END CERTIFICATE-----
-- name: nozzle
-  instances: 0
-  resource_pool: small_z1
-  stemcell: trusty
+        indexes:
+        - name: pcf_syslog
+          options: |
+            homePath   = $SPLUNK_DB/pcf_syslog/db
+            coldPath   = $SPLUNK_DB/pcf_syslog/colddb
+            thawedPath = $SPLUNK_DB/pcf_syslog/thaweddb
+        - name: pcf_apps
+          options: |
+            homePath   = $SPLUNK_DB/pcf_apps/db
+            coldPath   = $SPLUNK_DB/pcf_apps/colddb
+            thawedPath = $SPLUNK_DB/pcf_apps/thaweddb
+        inputs:
+        - name: tcp://5514
+          options: |
+            connection_host = ip
+            sourcetype = rfc5424_syslog
+            index = pcf_syslog
+        - name: tcp://10514
+          options: |
+            connection_host = ip
+            sourcetype = rfc5424_syslog
+            index = pcf_apps
+        ldap_search_base: ou=users,dc=example,dc=com
+        ldap_server_url: ldaps://ldap.example.com:636
+        license: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<license><signature>Example</signature></license></xml> "
+        mail_use_ssl: 0
+        mail_use_tls: 0
+        mailserver: smtp.example.com
+        org_manager_role: example_poweruser
+        roles:
+        - name: example_poweruser
+          options: |
+            importRoles = user
+            rtsearch = enabled
+            schedule_search = enabled
+            srchMaxTime = 0
+        server_name: splunk.example.com
+        service_search_filter: index=pcf_syslog NOT appname=gorouter OR appname=newrelic
+        system_index: pcf_syslog
+        tls_cert: |
+          -----BEGIN CERTIFICATE-----
+          ...
+          -----END CERTIFICATE-----
+          -----BEGIN CERTIFICATE-----
+          ......
+          -----END CERTIFICATE-----
+        tls_key: |
+          -----BEGIN RSA PRIVATE KEY-----
+          ...
+          -----END RSA PRIVATE KEY-----
+        users_regex: "^[a-zA-Z0-9]+$"
+    release: cf-splunk
+  name: splunk
   networks:
-  - name: service1
-    default:
+  - defaults:
     - dns
     - gateway
-#    static_ips: 
-#     static_ips: []
-#    - 10.245.0.61
-#    - 10.245.0.62
-  jobs:
-  - name: splunk-nozzle
-    release: cf-splunk
-    properties:
-      cf_splunk:
-        add_app_info: true
-        api_endoint: https://api.example.com
-        api_password: aoentuhaosntehusnaoehuaoeu
-        api_user: splunk-nozzle
-        events:
-        - ValueMetric
-        - CounterEvent
-        firehose_subscription_id: splunk-firehose-subscription
-        skip_ssl_validation: true
-        splunk_index: main
-        splunk_token: bb8e8c57-f22b-4b31-9bc9-6862b035543f
-        splunk_forwarder_url: http://forward.example.com:8088
+    name: service1
+    static_ips:
+    - 1.2.3.4
+  persistent_disk: 512000
+  stemcell: trusty
+  vm_type: splunk
+stemcells:
+- alias: trusty
+  name: bosh-azure-hyperv-ubuntu-trusty-go_agent
+  version: '3468'
 update:
   canaries: 1
-  canary_watch_time: 10000-120000
+  canary_watch_time: 10000-180000
   max_in_flight: 1
   serial: true
-  update_watch_time: 10000-120000
-
-
-variables: 
-- name: generated_splunk_ca
-  type: certificate
-  options:
-    is_ca: true
-    common_name: splunk CA
-- name: generated_splunk_cert
-  type: certificate
-  options:
-    ca: generated_splunk_ca
-    common_name: 10.245.0.60
-    alternative_names: 
-    - splunk
-    - 10.245.0.60
-
+  update_watch_time: 10000-180000
 releases:
 - name: cf-splunk
   version: 1.7.7
