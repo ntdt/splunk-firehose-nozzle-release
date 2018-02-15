@@ -133,9 +133,7 @@ update:
   max_in_flight: 1
   serial: true
   update_watch_time: 10000-180000
-
-releases:
 - name: cf-splunk
-  version: 1.8.0
-  url: https://github.com/emerald-squad/cf-splunk-release/releases/download/v1.8.0/cf-splunk-1.8.0.tgz
-  sha1: 155c26229e88cf97b04279c1595f09a3528c4403
+  version: 1.8.1
+  url: https://github.com/emerald-squad/cf-splunk-release/releases/download/v1.8.1/cf-splunk-1.8.1.tgz
+  sha1: 5eac6cb83a02b7e8080a172327b6f1a1cbc02320
