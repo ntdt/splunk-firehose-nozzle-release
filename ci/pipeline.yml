@@ -51,10 +51,10 @@ jobs:
     task: release
     file: git-repo/ci/tasks/release.yml
     params:
-      MINIO_BUCKET: ((s3_bucket))
-      MINIO_HOST: ((s3_host))
-      MINIO_ACCESS_KEY: ((s3_access_key))
-      MINIO_SECRET_KEY: ((s3_secret_key))
+      S3_BUCKET: ((s3_bucket))
+      S3_HOST: ((s3_host))
+      S3_ACCESS_KEY: ((s3_access_key))
+      S3_SECRET_KEY: ((s3_secret_key))
       REPO_ROOT: git-repo
       VERSION_FROM: version/number
       RELEASE_ROOT: gh

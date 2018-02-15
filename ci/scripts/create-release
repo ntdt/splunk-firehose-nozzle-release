@@ -58,7 +58,7 @@ blobstore:
 EOF
 
 header "Create final release"
-bosh2 -n update-release --force --final --version "${VERSION}"
+bosh2 -n create-release --force --final --version "${VERSION}"
 
 header "Create tarball from release"
 bosh2 -n create-release --force releases/$RELEASE_NAME/$RELEASE_NAME-$VERSION.yml \
