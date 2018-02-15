@@ -64,10 +64,13 @@ splunk/splunk-add-on-for-cloud-foundry_020.tgz:
   sha: 352cbbd6d0e04e9b89c1d903d83156c4abce1a84
 splunk/splunk-linux-x86_64.tgz:
   size: 227135261
+  object_id: 14999d74-98a9-44fd-46e4-88ab903d9581
   sha: 637043d9a5f4a3a093e8b01586357647e179f78c
 splunk/splunk-version.txt:
   size: 108
+  object_id: caee1453-fdc5-4917-5292-1fec601a6d35
   sha: ea02a4a7511b7d006fbd8bcd9bbb61ef0a05d4e3
 splunk/website-monitoring_26.tgz:
   size: 1360994
+  object_id: 4f2ead3a-cc10-4110-63c1-0049d8c2958f
   sha: 433ba138a363917ba307260bc773611a4f8e9c50
