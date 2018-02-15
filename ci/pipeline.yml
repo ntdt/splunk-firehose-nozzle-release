@@ -1,0 +1,90 @@
+---
+resource_types:
+  - name: slack-notification
+    type: docker-image
+    source:
+      repository: cfcommunity/slack-notification-resource
+      tag: latest
+
+resources:
+- name: git-repo
+  type: git
+  source:
+    uri: git@github.com:emerald-squad/splunk-firehose-nozzle-release.git
+    branch: master
+    private_key: ((splunk-firehose-nozzle-deploy-key))
+
+- name: notify
+  type: slack-notification
+  source:
+    url: ((slack-hook-url))
+
+- name: version
+  type: semver
+  source :
+    driver: git
+    branch: version
+    file: number
+    initial_version: 1.0.0
+    uri: git@github.com:emerald-squad/splunk-firehose-nozzle-release.git
+    private_key: ((splunk-firehose-nozzle-deploy-key))
+
+- name: github
+  type: github-release
+  source:
+    user: emerald-squad
+    repository: smb-volume-release
+    access_token: ((github-release-token))
+
+jobs:
+- name: create-release
+  public: true
+  serial: true
+  plan:
+  - name: inputs
+    aggregate:
+    - get: version
+      params: 
+        bump: final
+    - get: git-repo
+  - name: release
+    task: release
+    file: git-repo/ci/tasks/release.yml
+    params:
+      MINIO_BUCKET: ((s3_bucket))
+      MINIO_HOST: ((s3_host))
+      MINIO_ACCESS_KEY: ((s3_access_key))
+      MINIO_SECRET_KEY: ((s3_secret_key))
+      REPO_ROOT: git-repo
+      VERSION_FROM: version/number
+      RELEASE_ROOT: gh
+      REPO_OUT: pushme
+      NOTIFICATION_OUT: notifications
+      BRANCH: master
+      GITHUB_OWNER: emerald-squad
+  - name: upload-git
+    put: git-repo
+    params:
+      rebase: true
+      repository: pushme/git-repo
+  - name: github-release
+    put: github
+    params:
+      name:   gh/name
+      tag:    gh/tag
+      body:   gh/notes.md
+      globs: [gh/artifacts/*]
+  - name: version-bump
+    put: version
+    params:
+      bump: patch
+  - name: notify
+    put: notify
+    params:
+      channel: #ci
+      text_file: notifications/message
+  on_failure:
+    put: notify
+    params:
+      channel: #ci
+      text: "$BUILD_PIPELINE_NAME: <$ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME|Concourse Failure!> :ant:"

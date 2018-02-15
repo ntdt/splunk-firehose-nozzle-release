@@ -1,6 +1,10 @@
 ---
-blobstore:
-  provider: local
-  options:
-    blobstore_path: /tmp/cf-splunk-blobs
 final_name: cf-splunk
+blobstore:
+  provider: s3
+  options:
+    host: 
+    bucket_name: 
+    access_key_id: transfodevacct
+    secret_access_key: 
+
