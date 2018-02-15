@@ -133,8 +133,9 @@ update:
   max_in_flight: 1
   serial: true
   update_watch_time: 10000-180000
+
 releases:
 - name: cf-splunk
-  version: 1.7.7
-  url: https://github.com/emerald-squad/splunk-firehose-nozzle-release/releases/download/v1.7.7/splunk-firehose-nozzle-release.1.7.7.tar.gz
-  sha1: 96f0fa63625dfae5b112797251d60ca29227651f
+  version: 1.8.0
+  url: https://github.com/emerald-squad/cf-splunk-release/releases/download/v1.8.0/cf-splunk-1.8.0.tgz
+  sha1: 155c26229e88cf97b04279c1595f09a3528c4403
