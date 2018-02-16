@@ -5,7 +5,7 @@ RELEASE_NAME=$2
 VERSION=$3
 SHA1=$4
 MANIFEST_PATH=$5
-: ${MANIFEST_PATH:?USAGE: $0 GITHUB_OWNER RELEASE_NAME VERSION SHA1 MANIFEST_PATH}
+: ${MANIFEST_PATH:?USAGE: $0 GITHUB_OWNER RELEASE_NAME REPO_NAME VERSION SHA1 MANIFEST_PATH}
 
 set -e -u
 
@@ -15,6 +15,6 @@ cat > $MANIFEST_PATH <<YAML
 ${manifest_head}
 - name: $RELEASE_NAME
   version: $VERSION
-  url: https://github.com/${GITHUB_OWNER}/${RELEASE_NAME}-release/releases/download/v${VERSION}/${RELEASE_NAME}-${VERSION}.tgz
+  url: https://github.com/${GITHUB_OWNER}/${REPO_NAME}/releases/download/v${VERSION}/${RELEASE_NAME}-${VERSION}.tgz
   sha1: $SHA1
 YAML

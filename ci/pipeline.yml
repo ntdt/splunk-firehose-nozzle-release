@@ -33,7 +33,7 @@ resources:
   type: github-release
   source:
     user: emerald-squad
-    repository: smb-volume-release
+    repository: splunk-firehose-nozzle-release
     access_token: ((github-release-token))
 
 jobs:
@@ -62,6 +62,7 @@ jobs:
       NOTIFICATION_OUT: notifications
       BRANCH: master
       GITHUB_OWNER: emerald-squad
+      GITHUB_REPO: splunk-firehoze-nozzle-release
   - name: upload-git
     put: git-repo
     params:
