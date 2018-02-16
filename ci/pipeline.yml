@@ -62,7 +62,7 @@ jobs:
       NOTIFICATION_OUT: notifications
       BRANCH: master
       GITHUB_OWNER: emerald-squad
-      GITHUB_REPO: splunk-firehoze-nozzle-release
+      GITHUB_REPO: splunk-firehose-nozzle-release
   - name: upload-git
     put: git-repo
     params:
