@@ -54,6 +54,8 @@ properties:
       description: Cloud Foundry administrator password
     ldap_server_url:
       description: LDAP server URL (ldap://example.com:389)
+    ldap_domain:
+      description: Domain for auth, instead of using a dn base
     ldap_search_base:
       description: Search base for LDAP users (dc=example,dc=com)
     server_name:
