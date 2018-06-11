@@ -29,6 +29,9 @@ case $1 in
     mkdir -p ${PERSISTENT_DIR}/users
     mkdir -p ${PERSISTENT_DIR}/apps
     ln -fs ${PERSISTENT_DIR}/users ${PACKAGE_DIR}/etc/users
+    for i in ${PERSISTENT_DIR}/apps/*; do 
+      ln -fs "$i" /var/vcap/packages/splunk/etc/apps/
+    done
 
     chown -R vcap:vcap ${RUN_DIR} ${LOG_DIR} ${PACKAGE_DIR}/ ${PERSISTENT_DIR}/
 
