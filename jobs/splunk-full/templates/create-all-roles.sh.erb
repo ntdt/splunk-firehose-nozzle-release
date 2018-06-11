@@ -1,0 +1,56 @@
+#!/bin/bash -eu
+SPLUNK_ADMIN_USER=<%= p('cf_splunk.cf_admin_user') %>
+SPLUNK_ADMIN_PASSWORD=<%= p('cf_splunk.cf_admin_password') %>
+set -x
+
+for i in $(/var/vcap/packages/python/bin/python_wrapper /var/vcap/packages/splunk-filter/list-orgs.py); do
+  SPLUNK_ROLE_NAME=$i
+  SPLUNK_APP_NAME=$i
+  
+  ## CREATE THE ROLE, 
+  ROLE_EXISTS_CODE=$(curl -K - -k "https://localhost:8089/services/authorization/roles/${SPLUNK_ROLE_NAME}"  -sSw "%{http_code}" -o /dev/null <<< "-u ${SPLUNK_ADMIN_USER}:${SPLUNK_ADMIN_PASSWORD}")
+  if [ "$ROLE_EXISTS_CODE" == 404 ]; then
+    curl -sS -K - -k -X POST https://localhost:8089/services/authorization/roles?output_mode=json -d name=${SPLUNK_ROLE_NAME} <<< "-u ${SPLUNK_ADMIN_USER}:${SPLUNK_ADMIN_PASSWORD}"
+  fi
+  
+  ## IF NOT EXISTS: CREATE THE APP, REFRESH IT, GRANT PERMS
+  
+  APP_EXISTS_CODE=$(curl -K - -k "https://localhost:8089/services/apps/local/${SPLUNK_APP_NAME}" -sSw "%{http_code}" -o /dev/null <<< "-u ${SPLUNK_ADMIN_USER}:${SPLUNK_ADMIN_PASSWORD}")
+  if [ "$APP_EXISTS_CODE" == 404 ]; then
+    if test -d /var/vcap/store/splunk-persistent/apps/${SPLUNK_APP_NAME}; then
+      ln -fs /var/vcap/store/splunk-persistent/apps/${SPLUNK_APP_NAME} /var/vcap/packages/splunk/etc/apps
+      curl -sS -K - -k https://localhost:8089/services/apps/local?refresh=true <<< "-u ${SPLUNK_ADMIN_USER}:${SPLUNK_ADMIN_PASSWORD}"
+    else
+      
+      curl -sS -K - -k -X POST https://localhost:8089/services/apps/local -d "name=${SPLUNK_APP_NAME}&template=barebones" <<< "-u ${SPLUNK_ADMIN_USER}:${SPLUNK_ADMIN_PASSWORD}"
+      test -d /var/vcap/store/splunk-persistent/apps || mkdir -p /var/vcap/store/splunk-persistent/apps && chmod 755 /var/vcap/store/splunk-persistent/apps
+      mv /var/vcap/packages/splunk/etc/apps/${SPLUNK_APP_NAME} /var/vcap/store/splunk-persistent/apps/
+      ln -fs /var/vcap/store/splunk-persistent/apps/${SPLUNK_APP_NAME} /var/vcap/packages/splunk/etc/apps
+ 
+      ## REFRESH THE APP
+      curl -K - -k https://localhost:8089/services/apps/local/${SPLUNK_APP_NAME}?refresh=true <<< "-u ${SPLUNK_ADMIN_USER}:${SPLUNK_ADMIN_PASSWORD}"
+  
+      # GRANT PERMS ON APP
+      curl -K - -k -X POST https://localhost:8089/services/apps/local/${SPLUNK_APP_NAME}/acl \
+            -d owner=nobody \
+            -d sharing=app \
+            -d "perms.read=${SPLUNK_ROLE_NAME},admin" \
+            -d "perms.write=${SPLUNK_ROLE_NAME},admin" <<< "-u ${SPLUNK_ADMIN_USER}:${SPLUNK_ADMIN_PASSWORD}"
+    
+      curl -K - -k -X POST https://localhost:8089/services/apps/local/${SPLUNK_APP_NAME} -d "visible=yes" <<< "-u ${SPLUNK_ADMIN_USER}:${SPLUNK_ADMIN_PASSWORD}"
+      sleep 1
+      mkdir -p /var/vcap/packages/splunk/etc/apps/${SPLUNK_APP_NAME}/local  
+      chown vcap.vcap /var/vcap/packages/splunk/etc/apps/${SPLUNK_APP_NAME}/local  
+      cat > /var/vcap/packages/splunk/etc/apps/${SPLUNK_APP_NAME}/local/ui-prefs.conf  <<EOC
+[search]
+dispatch.earliest_time = @d
+dispatch.latest_time = now
+EOC
+      chown vcap.vcap /var/vcap/packages/splunk/etc/apps/${SPLUNK_APP_NAME}/local/ui-prefs.conf  
+ 
+      ## REFRESH THE APP AGAIN
+      curl -K - -k https://localhost:8089/services/apps/local/${SPLUNK_APP_NAME}?refresh=true <<< "-u ${SPLUNK_ADMIN_USER}:${SPLUNK_ADMIN_PASSWORD}"
+    fi
+  fi
+
+done

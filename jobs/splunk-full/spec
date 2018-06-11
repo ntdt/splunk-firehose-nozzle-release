@@ -3,6 +3,7 @@
 name: splunk-full
 templates:
   ctl.sh.erb:                            bin/ctl.sh
+  create-all-roles.sh.erb:               bin/create-all-roles.sh
   system_inputs.conf.erb:                config/system_local/inputs.conf
   system_user-seed.conf.erb:             config/system_local/user-seed.conf
   system_indexes.conf.erb:               config/system_local/indexes.conf
