@@ -85,6 +85,8 @@ case $1 in
       >>  $LOG_DIR/splunk.stdout.log \
       2>> $LOG_DIR/splunk.stderr.log
 
+    # horrible hack to get apps list up to date
+    (sleep 30; /var/vcap/jobs/splunk-full/bin/create-all-roles.sh)&
     ;;
 
   stop)

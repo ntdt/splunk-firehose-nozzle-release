@@ -3,6 +3,7 @@ SPLUNK_ADMIN_USER=<%= p('cf_splunk.admin_user') %>
 SPLUNK_ADMIN_PASSWORD=<%= p('cf_splunk.admin_pass') %>
 set -x
 
+pushd /var/vcap/packages/splunk-filter
 for i in $(/var/vcap/packages/python/bin/python_wrapper /var/vcap/packages/splunk-filter/list-orgs.py); do
   SPLUNK_ROLE_NAME=$i
   SPLUNK_APP_NAME=$i
@@ -54,3 +55,4 @@ EOC
   fi
 
 done
+popd
