@@ -1,8 +1,6 @@
 #!/bin/bash -eu
 SPLUNK_ADMIN_USER=<%= p('cf_splunk.admin_user') %>
 SPLUNK_ADMIN_PASSWORD=<%= p('cf_splunk.admin_pass') %>
-SLACK_WEBHOOK=<%= p('cf_splunk.slack_webhook') %>
-SLACK_MESSAGE=<%= p('cf_splunk.slack_message') %>
 set -x
 
 pushd /var/vcap/packages/splunk-filter
@@ -58,5 +56,3 @@ EOC
 
 done
 popd
-#posting to some slack channel
-curl -X POST -H 'Content-type: application/json' --data '{"text":"${SLACK_MESSAGE}"}' ${SLACK_WEBHOOK}
