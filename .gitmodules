@@ -4,3 +4,4 @@
 [submodule "src/splunk_filter"]
 	path = src/splunk_filter
 	url = https://github.com/emerald-squad/splunk_filter
+	branch = master
