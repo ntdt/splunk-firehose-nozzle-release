@@ -136,6 +136,6 @@ update:
 
 releases:
 - name: cf-splunk
-  version: 1.8.7
-  url: https://github.com/emerald-squad/splunk-firehose-nozzle-release/releases/download/v1.8.7/cf-splunk-1.8.7.tgz
-  sha1: a59fa8301a5c6df369d715f80990a3fa24a52ec3
+  version: 1.8.8
+  url: https://github.com/emerald-squad/splunk-firehose-nozzle-release/releases/download/v1.8.8/cf-splunk-1.8.8.tgz
+  sha1: c07ef147fd7ed560cfc8f3a3ccbdebc7ad822b31
