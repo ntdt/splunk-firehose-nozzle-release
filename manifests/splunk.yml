@@ -111,6 +111,8 @@ instance_groups:
           ...
           -----END RSA PRIVATE KEY-----
         users_regex: "^[a-zA-Z0-9]+$"
+        org_level_filters: host=<<org>>.* , cf_org_name=<<org>>
+        custom_added_filter: cf_org_name=p-spring-cloud-services
     release: cf-splunk
   name: splunk
   networks:
@@ -136,6 +138,6 @@ update:
 
 releases:
 - name: cf-splunk
-  version: 1.8.8
-  url: https://github.com/emerald-squad/splunk-firehose-nozzle-release/releases/download/v1.8.8/cf-splunk-1.8.8.tgz
-  sha1: c07ef147fd7ed560cfc8f3a3ccbdebc7ad822b31
+  version: 1.8.9
+  url: #TODO
+  sha1: #TODO
