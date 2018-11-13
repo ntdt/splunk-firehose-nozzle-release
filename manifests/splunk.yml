@@ -111,7 +111,7 @@ instance_groups:
           ...
           -----END RSA PRIVATE KEY-----
         users_regex: "^[a-zA-Z0-9]+$"
-        org_level_filters: host=((org)).* , cf_org_name=((org))
+        org_level_filters: host=<<org>>.* , cf_org_name=<<org>>
         custom_added_filter: cf_org_name=p-spring-cloud-services
     release: cf-splunk
   name: splunk
