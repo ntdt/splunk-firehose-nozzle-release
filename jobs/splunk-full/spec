@@ -161,7 +161,7 @@ properties:
     cachet_api:
       description: URL for Cachet API
     org_level_filters:
-      description: comma seperated list of filters that will be applied to all orgs a user belongs to. Place where org name will be replaced with ((org))
-      example: host=((org)).* , cf_org_name=((org)) 
+      description: comma seperated list of filters that will be applied to all orgs a user belongs to. Place where org name will be replaced with org
+      example: host=org.* , cf_org_name=org 
     custom_added_filter:
       description: Custom added filter for the splunk filter that will be appended to then end of every users filter with an OR operator
