@@ -4,6 +4,8 @@ RUN_DIR=/var/vcap/sys/run/splunk-full
 LOG_DIR=/var/vcap/sys/log/splunk-full
 JOB_DIR=/var/vcap/jobs/splunk-full
 PACKAGE_DIR=/var/vcap/packages/splunk
+SPLUNK_FILTER_DIR=/var/vcap/packages/splunk-filter
+PERSISTENT_DIR=/var/vcap/store/splunk-persistent
 PIDFILE=${RUN_DIR}/pid
 SPLUNK_DB=/var/vcap/store/splunk_db
 
@@ -13,18 +15,42 @@ case $1 in
     mkdir -p ${RUN_DIR} ${LOG_DIR}
     mkdir -p ${PACKAGE_DIR}/etc/system/local
 
-    chown -R vcap:vcap ${RUN_DIR} ${LOG_DIR} ${PACKAGE_DIR}/
+    if [ -d ${PACKAGE_DIR}/etc/users -a ! -h ${PACKAGE_DIR}/etc/users ]; then  
+      # etc/users is a real folder
+      if [ -d ${PERSISTENT_DIR}/users ]; then
+        # never overwrite the persistent one
+        mkdir -p ${PERSISTENT_DIR}/users
+        mv ${PACKAGE_DIR}/etc/users ${PACKAGE_DIR}/etc/users-$(date +%s)
+      else
+        mkdir -p ${PERSISTENT_DIR}
+        mv ${PACKAGE_DIR}/etc/users ${PERSISTENT_DIR}/
+      fi
+    fi
+    mkdir -p ${PERSISTENT_DIR}/users
+    mkdir -p ${PERSISTENT_DIR}/apps
+    ln -fs ${PERSISTENT_DIR}/users ${PACKAGE_DIR}/etc/users
+    for i in ${PERSISTENT_DIR}/apps/*; do 
+      ln -fs "$i" /var/vcap/packages/splunk/etc/apps/
+    done
+
+    chown -R vcap:vcap ${RUN_DIR} ${LOG_DIR} ${PACKAGE_DIR}/ ${PERSISTENT_DIR}/
 
     echo $$ > ${PIDFILE}
+
+    ln -fs ${JOB_DIR}/config/splunk_filter.conf ${SPLUNK_FILTER_DIR}/splunk_filter.conf
 
     mkdir -p ${SPLUNK_DB} && chown vcap:vcap ${SPLUNK_DB}
     ln -fs ${JOB_DIR}/config/splunk-launch.conf ${PACKAGE_DIR}/etc/
     # install local config files
     ln -fs ${JOB_DIR}/config/system_local/* ${PACKAGE_DIR}/etc/system/local/
 
+    mkdir -p ${PACKAGE_DIR}/etc/apps/search/local
+    ln -fs ${JOB_DIR}/config/apps_search_local/savedsearches.conf ${PACKAGE_DIR}/etc/apps/search/local/
+    ln -fs ${JOB_DIR}/config/apps_search_local/ui-prefs.conf ${PACKAGE_DIR}/etc/apps/search/local/
+
     # install idpCerts
     mkdir -p ${PACKAGE_DIR}/etc/auth/idpCerts
-    ln -s ${JOB_DIR}/config/auth/idpCerts/* ${PACKAGE_DIR}/etc/auth/idpCerts/
+    ln -fs ${JOB_DIR}/config/auth/idpCerts/* ${PACKAGE_DIR}/etc/auth/idpCerts/
 
     # install http event collector config
     mkdir -p ${PACKAGE_DIR}/etc/apps/splunk_httpinput/local
@@ -37,7 +63,7 @@ case $1 in
 
     # install license file
     mkdir -p ${PACKAGE_DIR}/etc/licenses/enterprise
-    ln -s ${JOB_DIR}/config/License.xml.lic ${PACKAGE_DIR}/etc/licenses/enterprise/
+    ln -fs ${JOB_DIR}/config/License.xml.lic ${PACKAGE_DIR}/etc/licenses/enterprise/
 
     # install config cf_ops dashboard
     mkdir -p ${PACKAGE_DIR}/etc/apps/Splunk_SA_CloudFoundry/local/data/ui/views
@@ -45,7 +71,7 @@ case $1 in
 
     # install alerts savedsearches in admin user profil
     mkdir -p  ${PACKAGE_DIR}/etc/users/admin/Splunk_SA_CloudFoundry/local
-    ln -fs ${JOB_DIR}/config/Splunk_SA_CloudFoundry/local/savedsearches.conf ${PACKAGE_DIR}/etc/users/admin/Splunk_SA_CloudFoundry/local/
+    ln -fs ${JOB_DIR}/config/Splunk_SA_CloudFoundry/local/savedsearches.conf ${PACKAGE_DIR}/etc/apps/Splunk_SA_CloudFoundry/local/
 
     # install website_monitoring
     mkdir -p  ${PACKAGE_DIR}/etc/apps/website_monitoring/local
@@ -59,6 +85,8 @@ case $1 in
       >>  $LOG_DIR/splunk.stdout.log \
       2>> $LOG_DIR/splunk.stderr.log
 
+    # horrible hack to get apps list up to date
+    (sleep 30; /var/vcap/jobs/splunk-full/bin/create-all-roles.sh)&
     ;;
 
   stop)

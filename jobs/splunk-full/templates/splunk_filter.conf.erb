@@ -1,0 +1,19 @@
+[cloudfoundry]
+CF_URL=<%= p('cf_splunk.cf_url') %>
+admin_user=<%= p('cf_splunk.cf_admin_user') %>
+admin_password=<%= p('cf_splunk.cf_admin_password') %>
+users_regex=<%= p('cf_splunk.users_regex') %>
+
+[ldap]
+LDAP_SERVER=<%= p('cf_splunk.ldap_server_url') %>
+LDAP_USER_ROOT=<%= p('cf_splunk.ldap_search_base') %>
+LDAP_DOMAIN=<%= p('cf_splunk.ldap_domain') %>
+
+[splunk]
+log_dir=/var/vcap/sys/log/splunk-full
+app_index_name=<%= p("cf_splunk.app_index") %>
+system_index_name=<%= p('cf_splunk.system_index') %>
+service_search_filter: <%= p('cf_splunk.service_search_filter') %>
+org_manager_role: <%= p('cf_splunk.org_manager_role') %>
+org_level_filters: <%= p('cf_splunk.org_level_filters') %>
+custom_added_filter: <%= p('cf_splunk.custom_added_filter') %>

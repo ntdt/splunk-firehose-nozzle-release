@@ -1,0 +1,12 @@
+---
+name: python
+dependencies:
+- sasl
+files:
+- python/Python-2.7.*.tar.xz
+- python/wheel-*-py2.py3-none-any.whl
+- python/pip-*-py2.py3-none-any.whl
+- python/setuptools-*-py2.py3-none-any.whl
+- python/virtualenv-*-py2.py3-none-any.whl
+- python/pyldap-2.4.37.tar.gz
+- python/requests-v2.18.4.tar.gz

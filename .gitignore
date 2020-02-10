@@ -3,6 +3,10 @@ config/private.yml
 
 /*.yml
 
+.final_builds/
+releases/
+/*.tar.gz
+
 dev_releases
 .blobs
 blobs

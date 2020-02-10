@@ -3,6 +3,7 @@
 name: splunk-full
 templates:
   ctl.sh.erb:                            bin/ctl.sh
+  create-all-roles.sh.erb:               bin/create-all-roles.sh
   system_inputs.conf.erb:                config/system_local/inputs.conf
   system_user-seed.conf.erb:             config/system_local/user-seed.conf
   system_indexes.conf.erb:               config/system_local/indexes.conf
@@ -19,20 +20,50 @@ templates:
   mycerts_cert.pem.erb:                  config/mycerts/cert.pem
   sample_cf_ops_dashboard.xml.erb:       config/Splunk_SA_CloudFoundry/local/sample_cf_ops_dashboard.xml
   savedsearches.conf.erb:                config/Splunk_SA_CloudFoundry/local/savedsearches.conf
+  apps_search_local_savedsearches.conf.erb:         config/apps_search_local/savedsearches.conf
+  apps_search_local_ui-prefs.conf.erb:         config/apps_search_local/ui-prefs.conf
   website_monitoring/app.conf:           config/website_monitoring_local/app.conf
   website_monitoring/inputs.conf.erb:    config/website_monitoring_local/inputs.conf
   website_monitoring/website_monitoring.conf:    config/website_monitoring_local/website_monitoring.conf
-  update_cachet.sh.erb                   bin/update_cachet.sh
+  update_cachet.sh.erb:                  bin/update_cachet.sh
+  splunk_filter.conf.erb:                config/splunk_filter.conf
 packages:
 - splunk
+- splunk-filter
+- openldap
+- python
+- jq
 
 properties:
   cf_splunk:
+    users_regex:
+      default: ^[a-zA-Z0-9-_]+$
+      description: regex to match valid splunk users in CF
+    system_index: 
+      default: pcf_syslog
+      description: name of splunk index for system logs, used for filtering
+    app_index: 
+      default: pcf_apps
+      description: name of splunk index for apps logs, used for filtering
+    service_search_filter:
+      default: index=pcf_syslog NOT appname=gorouter service-instance
+      description: Filter to apply to everybody for partial system index access
+    cf_admin_user:
+      default: admin
+      description: Cloud Foundry administrator user
+    cf_admin_password:
+      description: Cloud Foundry administrator password
+    ldap_server_url:
+      description: LDAP server URL (ldap://example.com:389)
+    ldap_domain:
+      description: Domain for auth, instead of using a dn base
+    ldap_search_base:
+      description: Search base for LDAP users (dc=example,dc=com)
     server_name:
       default: mysplunk
       description: FQDN of splunk server
     admin_user:
-      default: admin
+      default: 'admin'
       description: Admin user name
     admin_pass:
       default: changeme
@@ -110,6 +141,17 @@ properties:
         - name: myindex
           options:
             homePath = $SPLUNK_DB/myindex/db
+    inputs:
+      default: []
+      description: Inputs config of Splunk
+      example: |
+        See http://docs.splunk.com/Documentation/Splunk/6.6.1/Admin/Inputsconf
+        - name: tcp://1234
+          options: |
+            connection_host = ip
+            sourcetype = rfc5424_syslog
+            index = my_splunk_index
+           
     authentication:
       description: Configuration of Splunk authentication
     idpCert:
@@ -118,3 +160,8 @@ properties:
       description: API Token for Cachet
     cachet_api:
       description: URL for Cachet API
+    org_level_filters:
+      description: comma seperated list of filters that will be applied to all orgs a user belongs to. Place where org name will be replaced with org
+      example: host=org.* , cf_org_name=org 
+    custom_added_filter:
+      description: Custom added filter for the splunk filter that will be appended to then end of every users filter with an OR operator
