@@ -1,4 +1,4 @@
-<% if_p('cf_splunk.splunk_sa_cloudfoundry_alerts') do |alerts| %><% alerts.each do |alert| -%>
+<% if_p('cf_splunk.alerts') do |alerts| %><% alerts.each do |alert| -%>
 [<%= alert['name'] %>]
 description = <%= alert['description'] %>
 <% if alert.has_key?('slack') -%>

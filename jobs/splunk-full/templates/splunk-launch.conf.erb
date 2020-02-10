@@ -1,3 +1,6 @@
 SPLUNK_SERVER_NAME=splunkd
 SPLUNK_WEB_NAME=splunkweb
 SPLUNK_DB=/var/vcap/store/splunk_db
+<% if_p('cf_splunk.optimistic_about_file_locking') do |value| -%>
+OPTIMISTIC_ABOUT_FILE_LOCKING=<%= value %>
+<% end -%>

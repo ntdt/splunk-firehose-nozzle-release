@@ -1,0 +1,51 @@
+set -e # exit immediately if a simple command exits with a non-zero status
+set -u # report the usage of uninitialized variables
+
+# Detect # of CPUs so make jobs can be parallelized
+CPUS=$(grep -c ^processor /proc/cpuinfo)
+ # Available variables
+# $BOSH_COMPILE_TARGET - where this package & spec'd source files are available
+# $BOSH_INSTALL_TARGET - where you copy/install files to be included in package
+export HOME=/var/vcap
+
+tar xf python/Python-*.tar.xz
+pushd Python*
+  ./configure \
+    --prefix=${BOSH_INSTALL_TARGET} \
+    --with-ensurepip \
+    --enable-shared \
+    --enable-ipv6 \
+    --enable-unicode=ucs4
+
+  make -j $CPUS
+  make install
+popd
+
+for dir in $(ls -d /var/vcap/packages/*/bin); do export PATH=$dir:$PATH; done
+for dir in $(ls -d /var/vcap/packages/*/lib); do export LD_LIBRARY_PATH=$dir:${LD_LIBRARY_PATH:-}; done
+
+pip install --upgrade python/wheel-*-py2.py3-none-any.whl
+pip install --upgrade python/pip-*-py2.py3-none-any.whl
+pip install --upgrade python/setuptools-*-py2.py3-none-any.whl
+pip install --upgrade python/virtualenv-*-py2.py3-none-any.whl
+
+for dir in $(ls -d /var/vcap/packages/*/include); do export C_INCLUDE_PATH=$dir:${C_INCLUDE_PATH:-}; done
+export C_INCLUDE_PATH=/var/vcap/packages/sasl/include/sasl:${C_INCLUDE_PATH:-}
+tar xzf python/pyldap-2.4.37.tar.gz
+pushd pyldap-2.4.37
+  python setup.py install --prefix ${BOSH_INSTALL_TARGET}
+popd
+
+tar xzf python/requests-v2.18.4.tar.gz
+pushd requests-2.18.4
+  python setup.py install --prefix ${BOSH_INSTALL_TARGET}
+popd
+
+cat > ${BOSH_INSTALL_TARGET}/bin/python_wrapper <<EOF
+#!/bin/bash
+unset PYTHONPATH
+CURDIR="\$(dirname \$0)"
+export LD_LIBRARY_PATH="\${CURDIR}/../lib"
+"\${CURDIR}/python" \$@
+EOF
+chmod +x ${BOSH_INSTALL_TARGET}/bin/python_wrapper

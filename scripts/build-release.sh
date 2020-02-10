@@ -67,15 +67,16 @@ fi
 echo "${splunk_pkg_remote}" > "${splunk_version_path}"
 
 echo "Adding blobs"
-bosh add blob "${go_pkg_path}" golang
-bosh add blob "${go_version_path}" golang
-bosh add blob "${splunk_pkg_path}" splunk
-bosh add blob "${splunk_version_path}" splunk
+bosh add-blob "${go_pkg_path}" golang
+bosh add-blob "${go_version_path}" golang
+bosh add-blob "${splunk_pkg_path}" splunk
+bosh add-blob "${splunk_version_path}" splunk
 
 echo "Creating release"
-create_cmd="bosh create release --name cf-splunk --with-tarball --force"
+create_cmd="bosh create-release --name cf-splunk --tarball cf-splunk-${version}.tgz  "
 if [ "$version" != "" ]; then
     create_cmd+=" --version "${version}""
 fi
 
+echo $create_cmd
 eval ${create_cmd}

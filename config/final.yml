@@ -1,6 +1,9 @@
 ---
-blobstore:
-  provider: local
-  options:
-    blobstore_path: /tmp/cf-splunk-blobs
 final_name: cf-splunk
+blobstore:
+  provider: s3
+  options:
+    host: https://s3.apps.cfzcea.dev.desjardins.com
+    bucket_name: bosh-blobs
+    access_key_id: transfodevacct
+    secret_access_key: 1yp23TaaDPCRvT7Va41iAP3PRgZcoA+OdC1JBxgg56LfapNkn+9vNvpoKziXQMTl3MWwsBLNVxiaxpt6pBHMzQ==

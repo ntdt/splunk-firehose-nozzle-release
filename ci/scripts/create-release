@@ -1,0 +1,114 @@
+#!/bin/bash
+set -eu
+
+header() {
+	echo
+	echo "###############################################"
+	echo
+	echo $*
+	echo
+}
+
+: ${REPO_ROOT:?required}
+: ${RELEASE_ROOT:?required}
+: ${REPO_OUT:?required}
+: ${BRANCH:?required}
+: ${GITHUB_OWNER:?required}
+: ${GITHUB_REPO:?required}
+: ${VERSION_FROM:?required}
+
+header "Getting version number from ${VERSION_FROM}"
+if [[ ! -f ${VERSION_FROM} ]]; then
+  echo >&2 "Version file (${VERSION_FROM}) not found.  Did you misconfigure Concourse?"
+  exit 2
+fi
+VERSION=$(cat ${VERSION_FROM})
+if [[ -z ${VERSION} ]]; then
+  echo >&2 "Version file (${VERSION_FROM}) was empty.  Did you misconfigure Concourse?"
+  exit 2
+fi
+
+header "Getting release notes or generating them from git "
+if [[ ! -f ${REPO_ROOT}/ci/release_notes.md ]]; then
+  pushd ${REPO_ROOT}
+    git show > ci/release_notes.md
+  popd
+fi
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+header "Figuring out release name"
+cd ${REPO_ROOT}
+RELEASE_NAME=$(bosh2 int config/final.yml --path /final_name)
+
+header "deleting .final_builds folder"
+rm -rf .final_builds
+
+header "Set S3 blobs real source..."
+
+cat <<EOF >config/final.yml
+---
+final_name: $RELEASE_NAME
+blobstore:
+  provider: s3
+  options:
+    host: $S3_HOST
+    bucket_name: $S3_BUCKET
+    access_key_id: $S3_ACCESS_KEY
+    secret_access_key: $S3_SECRET_KEY
+EOF
+
+header "Create final release"
+bosh2 -n create-release --force --final --version "${VERSION}"
+
+header "Create tarball from release"
+bosh2 -n create-release --force releases/$RELEASE_NAME/$RELEASE_NAME-$VERSION.yml \
+                      --tarball releases/$RELEASE_NAME/$RELEASE_NAME-$VERSION.tgz
+cd -
+
+RELEASE_TGZ=$REPO_ROOT/releases/$RELEASE_NAME/$RELEASE_NAME-$VERSION.tgz
+export SHA1=$(sha1sum $RELEASE_TGZ | head -n1 | awk '{print $1}')
+echo "SHA1=$SHA1"
+
+mkdir -p ${RELEASE_ROOT}/artifacts
+echo "v${VERSION}"                         > ${RELEASE_ROOT}/tag
+echo "v${VERSION}"                         > ${RELEASE_ROOT}/name
+mv ${REPO_ROOT}/releases/*/*-${VERSION}.tgz  ${RELEASE_ROOT}/artifacts
+mv ${REPO_ROOT}/ci/release_notes.md          ${RELEASE_ROOT}/notes.md
+cat >> ${RELEASE_ROOT}/notes.md <<EOF
+
+### Deployment
+\`\`\`yaml
+releases:
+- name: $RELEASE_NAME
+  version: $VERSION
+  url: https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}/releases/download/v${VERSION}/${RELEASE_NAME}-${VERSION}.tgz
+  sha1: $SHA1
+\`\`\`
+EOF
+cat > ${RELEASE_ROOT}/notification <<EOF
+<!here> New ${RELEASE_NAME} v${VERSION} released!
+EOF
+
+
+header "Update git repo with final release..."
+if [[ -z $(git config --global user.email) ]]; then
+  git config --global user.email "ci@emerald-squad"
+fi
+if [[ -z $(git config --global user.name) ]]; then
+  git config --global user.name "Concourse"
+fi
+
+(cd ${REPO_ROOT}
+ $DIR/update-manifest $GITHUB_OWNER $GITHUB_REPO $RELEASE_NAME $VERSION $SHA1 manifests/splunk.yml
+ git merge --no-edit ${BRANCH}
+ git add -A
+ git status
+ git commit -m "release v${VERSION}")
+
+# so that future steps in the pipeline can push our changes
+cp -a ${REPO_ROOT} ${REPO_OUT}
+
+cat > ${NOTIFICATION_OUT:-notifications}/message <<EOS
+New ${RELEASE_NAME} v${VERSION} released. <https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}/releases/tag/v${VERSION}|Release notes>.
+EOS
